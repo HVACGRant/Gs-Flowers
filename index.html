@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>G's Flowers Inventory</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Playfair Display", serif;
+        background: linear-gradient(to bottom, #EFA3B3, #D96A7B, #B84F63);
+        color: #FCE8EB;
+        overflow-x: hidden;
+    }
+
+    /* ---------------- COVER SHEET ---------------- */
+
+    #coverSheet {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 80px 20px;
+        text-align: center;
+        z-index: 9999;
+        transition: opacity 0.8s ease;
+    }
+
+    .cover-text {
+        font-weight: 700;
+        color: #FCE8EB;
+    }
+
+    .top-name {
+        font-size: 2.5rem;
+    }
+
+    .top-name span {
+        font-size: 5rem; /* Double-size G */
+    }
+
+    .middle-name {
+        font-size: 4rem; /* Double-size whole line */
+    }
+
+    .middle-name span {
+        font-size: 7rem; /* Triple-size G */
+    }
+
+    .bottom-name {
+        font-size: 2.5rem;
+    }
+
+    .bottom-name span {
+        font-size: 5rem; /* Double-size G */
+    }
+
+    #nextBtn {
+        margin-bottom: 40px;
+        padding: 12px 28px;
+        background: #8A2F45;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.4rem;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    #nextBtn:hover {
+        background: #B84F63;
+    }
+
+    /* ---------------- INVENTORY PAGE ---------------- */
+
+    #inventoryPage {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.8s ease;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 3rem;
+        font-weight: 700;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px;
+        padding-right: 20px;
+        text-align: left;
+        font-size: 1.2rem;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+        width: 40%;
+    }
+
+    th:nth-child(4), td:nth-child(4) {
+        width: 140px;
+    }
+
+    th {
+        background: rgba(255, 255, 255, 0.2);
+        font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    tr:nth-child(odd) {
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    input {
+        width: 100%;
+        padding: 6px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 6px;
+        outline: none;
+    }
+
+    .small-input {
+        width: 70px;
+    }
+
+    .description-wrapper {
+        position: relative;
+        padding-right: 12px;
+    }
+
+    .description-input {
+        width: 100%;
+        padding-right: 28px;
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    .notes-icon {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .notes-icon.active {
+        color: #8A2F45;
+        opacity: 1;
+    }
+
+    .toggle {
+        width: 60px;
+        height: 30px;
+        position: relative;
+        display: inline-block;
+    }
+
+    .toggle input {
+        display: none;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        background-color: #ccc;
+        border-radius: 30px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition: .3s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 24px;
+        width: 24px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: .3s;
+    }
+
+    input:checked + .slider {
+        background-color: #8A2F45;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(30px);
+    }
+
+    #resetPageBtn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 8px 14px;
+        background: #ff4444;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 700;
+    }
+
+    .sold-row {
+        background: rgba(255, 255, 255, 0.25) !important;
+        transition: 0.25s;
+    }
+
+    .sold-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        background: #8A2F45;
+        color: white;
+        font-size: 0.9rem;
+        font-weight: 700;
+        border-radius: 6px;
+        margin-left: 10px;
+        opacity: 0;
+        transform: translateY(-2px);
+        transition: 0.25s ease;
+    }
+
+    .sold-row .sold-badge {
+        opacity: 1;
+    }
+
+    /* ---------------- FOOTER ---------------- */
+
+    #footerSignature {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 1.2rem;
+        opacity: 0.7;
+        letter-spacing: 1px;
+    }
+
+</style>
+</head>
+<body>
+
+<!-- ---------------- COVER SHEET ---------------- -->
+
+<div id="coverSheet">
+
+    <div class="cover-text top-name">
+        <span>G</span>aby
+    </div>
+
+    <div class="cover-text middle-name">
+        <span>G</span>'s Flowers
+    </div>
+
+    <div class="cover-text bottom-name">
+        <span>G</span>inger
+    </div>
+
+    <button id="nextBtn">Next</button>
+</div>
+
+<!-- ---------------- INVENTORY PAGE ---------------- -->
+
+<div id="inventoryPage">
+
+<button id="resetPageBtn">Reset Page</button>
+
+<h1>Inventory</h1>
+
+<table id="inventoryTable">
+    <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Sold</th>
+        <th>Inventory Cost</th>
+        <th>Profit</th>
+        <th></th>
+    </tr>
+</table>
+
+<div id="footerSignature">Designed by Danny</div>
+
+</div>
+
+<!-- ---------------- NOTES POPUP ---------------- -->
+
+<div id="notesPopup" 
+     style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+            background:white; padding:20px; border-radius:12px; width:300px; height:240px;
+            box-shadow:0 0 20px rgba(0,0,0,0.3); z-index:9999;">
+
+    <h3 style="margin-top:0; color:#8A2F45;">Notes</h3>
+
+    <textarea id="notesArea" 
+              style="width:100%; height:120px; resize:none; font-size:1rem;"></textarea>
+
+    <div style="display:flex; justify-content:space-between; margin-top:10px;">
+        <button id="deleteNotes" 
+                style="padding:6px 12px; background:#B84F63; color:white;
+                       border:none; border-radius:6px; cursor:pointer;">
+            Delete Notes
+        </button>
+
+        <button id="closeNotes" 
+                style="padding:6px 12px; background:#8A2F45; color:white;
+                       border:none; border-radius:6px; cursor:pointer;">
+            Close
+        </button>
+    </div>
+</div>
+
+<script>
+
+/* ---------------- COVER SHEET TRANSITION ---------------- */
+
+document.getElementById("nextBtn").addEventListener("click", function() {
+    const cover = document.getElementById("coverSheet");
+    const page = document.getElementById("inventoryPage");
+
+    cover.style.opacity = "0";
+    setTimeout(() => {
+        cover.style.display = "none";
+        page.style.opacity = "1";
+        page.style.pointerEvents = "auto";
+    }, 800);
+});
+
+/* ---------------- GLOBAL for Notes Fix ---------------- */
+let activeNotesInput = null;
+
+/* ---------------- AUTO-SAVE FUNCTION ---------------- */
+function saveData() {
+    const rows = [];
+    document.querySelectorAll("#inventoryTable tr").forEach((tr, index) => {
+        if (index === 0) return;
+
+        const cells = tr.querySelectorAll("td");
+        if (cells.length === 0) return;
+
+        rows.push({
+            name: cells[0].querySelector("input")?.value || "",
+            quantity: cells[1].querySelector("input")?.value || "",
+            description: cells[2].querySelector("input")?.value || "",
+            price: cells[3].querySelector("input")?.value || "",
+            sold: cells[4].querySelector("input")?.checked || false,
+            inventoryCost: cells[5].querySelector("input")?.value || "",
+            profit: cells[6].querySelector("input")?.value || ""
+        });
+    });
+
+    localStorage.setItem("inventoryData", JSON.stringify(rows));
+}
+
+/* ---------------- ADD ROW FUNCTION ---------------- */
+function addRow(data = {}) {
+    const table = document.getElementById("inventoryTable");
+    const newRow = table.insertRow(-1);
+
+    newRow.innerHTML = `
+        <td><input type="text" value="${data.name || ""}"></td>
+        <td><input type="number" class="small-input quantity" value="${data.quantity || ""}"></td>
+        <td>
+            <div class="description-wrapper">
+                <input type="text" class="description-input" value="${data.description || ""}">
+                <span class="notes-icon">📝</span>
+            </div>
+        </td>
+        <td><input type="number" step="0.01" class="small-input price" value="${data.price || ""}"></td>
+        <td>
+            <label class="toggle">
+                <input type="checkbox" class="sold-toggle" ${data.sold ? "checked" : ""}>
+                <span class="slider"></span>
+            </label>
+        </td>
+        <td><input type="text" class="small-input inventory-cost" readonly value="${data.inventoryCost || "0.00"}"></td>
+        <td><input type="text" class="small-input profit" readonly value="${data.profit || "0.00"}"></td>
+        <td class="sold-badge-cell">
+            <span class="sold-badge">SOLD</span>
+        </td>
+    `;
+
+    if (data.sold) {
+        newRow.classList.add("sold-row");
+        newRow.querySelector(".sold-badge").style.opacity = "1";
+    }
+}
+
+/* ---------------- AUTO-LOAD FUNCTION ---------------- */
+function loadData() {
+    const saved = localStorage.getItem("inventoryData");
+
+    if (saved) {
+        const rows = JSON.parse(saved);
+        rows.forEach(data => addRow(data));
+    }
+
+    if (!saved || JSON.parse(saved).length === 0) {
+        addRow();
+    }
+}
+
+/* ---------------- INITIAL LOAD ---------------- */
+loadData();
+
+/* ---------------- NAVIGATION LOGIC ---------------- */
+document.getElementById("inventoryTable").addEventListener("keydown", function(e) {
+    const currentInput = e.target;
+    if (!currentInput.closest("tr")) return;
+
+    const row = currentInput.closest("tr");
+
+    const inputs = Array.from(
+        row.querySelectorAll("input:not([readonly]):not(.sold-toggle)")
+    );
+
+    const index = inputs.indexOf(currentInput);
+    const lastInput = inputs[inputs.length - 1];
+
+    if (e.key === "Enter" || e.key === "Tab") {
+        e.preventDefault();
+
+        if (currentInput === lastInput) {
+            addRow();
+            saveData();
+            const lastRow = document.querySelectorAll("#inventoryTable tr");
+            lastRow[lastRow.length - 1].querySelector("input").focus();
+        } else {
+            inputs[index + 1].focus();
+        }
+    }
+
+    if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const nextRow = row.nextElementSibling;
+        if (nextRow) {
+            const nextInputs = Array.from(
+                nextRow.querySelectorAll("input:not([readonly]):not(.sold-toggle)")
+            );
+            if (nextInputs[index]) nextInputs[index].focus();
+        }
+    }
+
+    if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prevRow = row.previousElementSibling;
+        if (prevRow && prevRow.rowIndex > 0) {
+            const prevInputs = Array.from(
+                prevRow.querySelectorAll("input:not([readonly]):not(.sold-toggle)")
+            );
+            if (prevInputs[index]) prevInputs[index].focus();
+        }
+    }
+});
+
+/* ---------------- AUTO-CALC + HIGHLIGHT + BADGE ---------------- */
+document.getElementById("inventoryTable").addEventListener("input", function(e) {
+    const row = e.target.closest("tr");
+    if (!row) return;
+
+    const price = parseFloat(row.querySelector(".price")?.value || 0);
+    const quantity = parseFloat(row.querySelector(".quantity")?.value || 0);
+    const sold = row.querySelector(".sold-toggle")?.checked;
+
+    const inventoryCost = row.querySelector(".inventory-cost");
+    const profit = row.querySelector(".profit");
+    const badge = row.querySelector(".sold-badge");
+
+    if (sold) {
+        profit.value = (price * quantity).toFixed(2);
+        inventoryCost.value = "0.00";
+        row.classList.add("sold-row");
+        badge.style.opacity = "1";
+    } else {
+        inventoryCost.value = (price * quantity).toFixed(2);
+        profit.value = "0.00";
+        row.classList.remove("sold-row");
+        badge.style.opacity = "0";
+    }
+
+    saveData();
+});
+
+/* ---------------- NOTES POPUP ---------------- */
+document.addEventListener("click", function(e) {
+    if (e.target.classList.contains("notes-icon")) {
+        const wrapper = e.target.closest(".description-wrapper");
+        const input = wrapper.querySelector(".description-input");
+
+        activeNotesInput = input;
+
+        document.getElementById("notesArea").value = input.value;
+
+        const popup = document.getElementById("notesPopup");
+        popup.style.display = "block";
+    }
+});
+
+document.getElementById("closeNotes").addEventListener("click", function() {
+    if (activeNotesInput) {
+        activeNotesInput.value = document.getElementById("notesArea").value;
+
+        const icon = activeNotesInput.closest(".description-wrapper").querySelector(".notes-icon");
+        if (activeNotesInput.value.trim() !== "") {
+            icon.classList.add("active");
+        } else {
+            icon.classList.remove("active");
+        }
+    }
+
+    document.getElementById("notesPopup").style.display = "none";
+    saveData();
+});
+
+document.getElementById("deleteNotes").addEventListener("click", function() {
+    if (activeNotesInput) {
+        activeNotesInput.value = "";
+        document.getElementById("notesArea").value = "";
+
+        const icon = activeNotesInput.closest(".description-wrapper").querySelector(".notes-icon");
+        icon.classList.remove("active");
+    }
+
+    saveData();
+});
+
+/* ---------------- RESET-BUT-SAVE ---------------- */
+document.getElementById("resetPageBtn").addEventListener("click", function() {
+    if (confirm("Clear the table but keep saved data?")) {
+        const rows = document.querySelectorAll("#inventoryTable tr");
+        rows.forEach((row, index) => {
+            if (index > 0) row.remove();
+        });
+        addRow();
+    }
+});
+
+</script>
+
+</body>
+</html>
