@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -150,173 +151,152 @@
         padding-right: 12px;
     }
 
-    .description-input {
-        width: 100%;
-        padding-right: 28px;
-    }
-
     .notes-icon {
         position: absolute;
         right: 6px;
         top: 50%;
         transform: translateY(-50%);
-        opacity: 0.5;
         cursor: pointer;
+        opacity: 0.4;
+        transition: 0.2s;
     }
 
-    .notes-icon.active { opacity: 1; }
-
-    .toggle { width: 60px; height: 30px; position: relative; display: inline-block; }
-    .toggle input { display: none; }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        background-color: #ccc;
-        border-radius: 30px;
-        top: 0; left: 0; right: 0; bottom: 0;
-        transition: .3s;
+    .notes-icon.active {
+        opacity: 1;
+        color: black;
     }
 
-    .slider:before {
-        content: "";
-        position: absolute;
-        height: 24px;
-        width: 24px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        border-radius: 50%;
-        transition: .3s;
-    }
-
-    input:checked + .slider { background-color: black; }
-    input:checked + .slider:before { transform: translateX(30px); }
-
-    #resetPageBtn {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 8px 14px;
-        background: black;
-        color: white;
-        border-radius: 6px;
-        cursor: pointer;
-        z-index: 10;
-    }
-
-    .sold-row { background: rgba(0, 0, 0, 0.15) !important; }
-
+    /* SOLD BADGE */
     .sold-badge {
-        padding: 4px 10px;
-        background: black;
-        color: white;
-        font-size: 0.9rem;
-        border-radius: 6px;
         opacity: 0;
-        transition: 0.25s;
+        transition: 0.3s ease;
+        font-weight: bold;
+        color: red;
     }
 
-    .sold-row .sold-badge { opacity: 1; }
+    .sold-row {
+        background: rgba(255, 0, 0, 0.08) !important;
+    }
 
-    #footerSignature {
-        text-align: center;
-        margin-top: 30px;
-        opacity: 0.7;
+    /* NOTES POPUP */
+    #notesPopup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        width: 300px;
+        z-index: 99999;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    #notesArea {
+        width: 100%;
+        height: 120px;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #aaa;
+        resize: none;
+    }
+
+    #closeNotes, #deleteNotes {
+        margin-top: 10px;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    #closeNotes { background: black; color: white; }
+    #deleteNotes { background: red; color: white; }
+
+    /* RESET BUTTON */
+    #resetPageBtn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: black;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
     }
 </style>
 </head>
+
 <body>
 
 <div id="watermark">G</div>
 
 <!-- COVER SHEET -->
 <div id="coverSheet">
-    <div class="cover-text top-name"><span>G</span>aby</div>
-    <div class="cover-text middle-name"><span>G</span>'s Flowers</div>
-    <div class="cover-text bottom-name"><span>G</span>inger</div>
-    <button id="nextBtn">Next</button>
+    <div class="top-name cover-text">G’s <span>Flowers</span></div>
+    <div class="middle-name cover-text">Inventory <span>Tool</span></div>
+    <div class="bottom-name cover-text">By <span>Danny</span></div>
+    <button id="nextBtn">Enter</button>
 </div>
 
 <!-- INVENTORY PAGE -->
 <div id="inventoryPage">
+    <h1>G’s Flowers Inventory</h1>
 
-<button id="resetPageBtn">Reset Page</button>
+    <table id="inventoryTable">
+        <tr>
+            <th>Name</th>
+            <th>Qty</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Cash/App</th>
+            <th>Sold</th>
+            <th></th>
+            <th></th>
+            <th>Status</th>
+        </tr>
 
-<h1>Inventory</h1>
+        <!-- Totals Row -->
+        <tr id="totalsRow">
+            <td colspan="3"></td>
+            <td><input id="totalInventoryCost" type="text" readonly></td>
+            <td><input id="totalProfit" type="text" readonly></td>
+            <td colspan="4"></td>
+        </tr>
+    </table>
 
-<table id="inventoryTable">
-    <tr>
-        <th>Name</th>
-        <th>Quantity</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Cash/App</th>
-        <th>Sold</th>
-        <th>Inventory Cost</th>
-        <th>Profit</th>
-        <th></th>
-    </tr>
-
-    <!-- TOTALS ROW (A1) -->
-    <tr id="totalsRow">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input id="totalInventoryCost" class="small-input" readonly value="0.00"></td>
-        <td><input id="totalProfit" class="small-input" readonly value="0.00"></td>
-        <td></td>
-    </tr>
-</table>
-
-<div id="footerSignature">Designed by Danny</div>
-
+    <button id="resetPageBtn">Reset Page</button>
 </div>
 
 <!-- NOTES POPUP -->
-<div id="notesPopup" 
-     style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
-            background:white; padding:20px; border-radius:12px; width:300px; height:240px;
-            box-shadow:0 0 20px rgba(0,0,0,0.3); z-index:9999;">
-
-    <h3 style="margin-top:0;">Notes</h3>
-
-    <textarea id="notesArea" style="width:100%; height:120px;"></textarea>
-
-    <div style="display:flex; justify-content:space-between; margin-top:10px;">
-        <button id="deleteNotes" style="padding:6px 12px; background:black; color:white;">Delete Notes</button>
-        <button id="closeNotes" style="padding:6px 12px; background:#444; color:white;">Close</button>
-    </div>
+<div id="notesPopup">
+    <textarea id="notesArea"></textarea>
+    <button id="closeNotes">Save</button>
+    <button id="deleteNotes">Delete</button>
 </div>
 
 <script>
-/* COVER SHEET */
-document.getElementById("nextBtn").addEventListener("click", () => {
-    const cover = document.getElementById("coverSheet");
-    const page = document.getElementById("inventoryPage");
-
-    cover.style.opacity = "0";
+/* COVER SHEET LOGIC */
+document.getElementById("nextBtn").addEventListener("click", function() {
+    document.getElementById("coverSheet").style.opacity = "0";
     setTimeout(() => {
-        cover.style.display = "none";
+        document.getElementById("coverSheet").style.display = "none";
+        const page = document.getElementById("inventoryPage");
         page.style.opacity = "1";
         page.style.pointerEvents = "auto";
     }, 800);
 });
 
-/* GLOBAL */
+/* NOTES HANDLING */
 let activeNotesInput = null;
 
 /* SAVE */
 function saveData() {
     const rows = [];
     document.querySelectorAll("#inventoryTable tr").forEach((tr, index) => {
-        if (index <= 1) return; // skip header + totals row
+        if (index <= 1) return;
 
         const cells = tr.querySelectorAll("td");
-        if (cells.length === 0) return;
 
         rows.push({
             name: cells[0].querySelector("input")?.value || "",
@@ -503,4 +483,3 @@ document.getElementById("resetPageBtn").addEventListener("click", function() {
 
 </body>
 </html>
-
