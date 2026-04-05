@@ -1,17 +1,37 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>G's Flowers Inventory</title>
 
+<!-- Boutique Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
     body {
         margin: 0;
         padding: 0;
         font-family: "Playfair Display", serif;
-        background: linear-gradient(to bottom, #EFA3B3, #D96A7B, #B84F63);
-        color: #FCE8EB;
+        background: #F7DDE2; /* Soft boutique pink */
+        color: black;
         overflow-x: hidden;
+        position: relative;
+    }
+
+    /* ---------------- WATERMARK ---------------- */
+    #watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Great Vibes", cursive;
+        font-size: 22rem;
+        color: black;
+        opacity: 0.06;
+        pointer-events: none;
+        user-select: none;
+        z-index: 0;
     }
 
     /* ---------------- COVER SHEET ---------------- */
@@ -22,7 +42,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: inherit;
+        background: #F7DDE2;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -35,37 +55,38 @@
 
     .cover-text {
         font-weight: 700;
-        color: #FCE8EB;
+        color: black;
+        font-family: "Great Vibes", cursive;
     }
 
     .top-name {
-        font-size: 2.5rem;
+        font-size: 3rem;
     }
 
     .top-name span {
-        font-size: 5rem; /* Double-size G */
+        font-size: 6rem;
     }
 
     .middle-name {
-        font-size: 4rem; /* Double-size whole line */
+        font-size: 5rem;
     }
 
     .middle-name span {
-        font-size: 7rem; /* Triple-size G */
+        font-size: 8rem;
     }
 
     .bottom-name {
-        font-size: 2.5rem;
+        font-size: 3rem;
     }
 
     .bottom-name span {
-        font-size: 5rem; /* Double-size G */
+        font-size: 6rem;
     }
 
     #nextBtn {
         margin-bottom: 40px;
         padding: 12px 28px;
-        background: #8A2F45;
+        background: black;
         color: white;
         border: none;
         border-radius: 8px;
@@ -75,7 +96,7 @@
     }
 
     #nextBtn:hover {
-        background: #B84F63;
+        background: #444;
     }
 
     /* ---------------- INVENTORY PAGE ---------------- */
@@ -85,19 +106,22 @@
         pointer-events: none;
         transition: opacity 0.8s ease;
         padding: 20px;
+        position: relative;
+        z-index: 2;
     }
 
     h1 {
         text-align: center;
         margin-bottom: 20px;
-        font-size: 3rem;
-        font-weight: 700;
+        font-size: 3.2rem;
+        font-family: "Great Vibes", cursive;
+        font-weight: 400;
     }
 
     table {
         width: 100%;
         border-collapse: collapse;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.6);
         border-radius: 12px;
         overflow: hidden;
     }
@@ -107,6 +131,7 @@
         padding-right: 20px;
         text-align: left;
         font-size: 1.2rem;
+        color: black;
     }
 
     th:nth-child(3), td:nth-child(3) {
@@ -118,25 +143,27 @@
     }
 
     th {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.1);
         font-weight: 700;
     }
 
     tr:nth-child(even) {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(0, 0, 0, 0.05);
     }
 
     tr:nth-child(odd) {
-        background: rgba(255, 255, 255, 0.04);
+        background: rgba(0, 0, 0, 0.02);
     }
 
     input {
         width: 100%;
         padding: 6px;
         font-size: 1rem;
-        border: none;
+        border: 1px solid #999;
         border-radius: 6px;
         outline: none;
+        background: white;
+        color: black;
     }
 
     .small-input {
@@ -168,7 +195,7 @@
     }
 
     .notes-icon.active {
-        color: #8A2F45;
+        color: black;
         opacity: 1;
     }
 
@@ -208,7 +235,7 @@
     }
 
     input:checked + .slider {
-        background-color: #8A2F45;
+        background-color: black;
     }
 
     input:checked + .slider:before {
@@ -220,23 +247,24 @@
         top: 20px;
         right: 20px;
         padding: 8px 14px;
-        background: #ff4444;
+        background: black;
         color: white;
         border: none;
         border-radius: 6px;
         cursor: pointer;
         font-weight: 700;
+        z-index: 10;
     }
 
     .sold-row {
-        background: rgba(255, 255, 255, 0.25) !important;
+        background: rgba(0, 0, 0, 0.15) !important;
         transition: 0.25s;
     }
 
     .sold-badge {
         display: inline-block;
         padding: 4px 10px;
-        background: #8A2F45;
+        background: black;
         color: white;
         font-size: 0.9rem;
         font-weight: 700;
@@ -251,19 +279,20 @@
         opacity: 1;
     }
 
-    /* ---------------- FOOTER ---------------- */
-
     #footerSignature {
         text-align: center;
         margin-top: 30px;
         font-size: 1.2rem;
         opacity: 0.7;
         letter-spacing: 1px;
+        font-family: "Playfair Display", serif;
     }
-
 </style>
 </head>
 <body>
+
+<!-- WATERMARK -->
+<div id="watermark">G</div>
 
 <!-- ---------------- COVER SHEET ---------------- -->
 
@@ -316,20 +345,20 @@
             background:white; padding:20px; border-radius:12px; width:300px; height:240px;
             box-shadow:0 0 20px rgba(0,0,0,0.3); z-index:9999;">
 
-    <h3 style="margin-top:0; color:#8A2F45;">Notes</h3>
+    <h3 style="margin-top:0; color:black; font-family:'Playfair Display', serif;">Notes</h3>
 
     <textarea id="notesArea" 
               style="width:100%; height:120px; resize:none; font-size:1rem;"></textarea>
 
     <div style="display:flex; justify-content:space-between; margin-top:10px;">
         <button id="deleteNotes" 
-                style="padding:6px 12px; background:#B84F63; color:white;
+                style="padding:6px 12px; background:black; color:white;
                        border:none; border-radius:6px; cursor:pointer;">
             Delete Notes
         </button>
 
         <button id="closeNotes" 
-                style="padding:6px 12px; background:#8A2F45; color:white;
+                style="padding:6px 12px; background:#444; color:white;
                        border:none; border-radius:6px; cursor:pointer;">
             Close
         </button>
@@ -337,9 +366,7 @@
 </div>
 
 <script>
-
 /* ---------------- COVER SHEET TRANSITION ---------------- */
-
 document.getElementById("nextBtn").addEventListener("click", function() {
     const cover = document.getElementById("coverSheet");
     const page = document.getElementById("inventoryPage");
@@ -560,7 +587,6 @@ document.getElementById("resetPageBtn").addEventListener("click", function() {
         addRow();
     }
 });
-
 </script>
 
 </body>
