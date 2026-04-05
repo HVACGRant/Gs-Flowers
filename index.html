@@ -44,9 +44,9 @@
         background: #F7DDE2;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        padding: 80px 20px;
+        padding: 40px 20px;
         text-align: center;
         z-index: 9999;
         transition: opacity 0.8s ease;
@@ -58,32 +58,35 @@
         font-family: "Great Vibes", cursive;
     }
 
-    /* Gaby left */
+    /* Gaby — left, closer */
     .top-name {
         font-size: 3rem;
         align-self: flex-start;
         margin-left: 40px;
+        margin-bottom: 10px; /* moved closer */
     }
 
     .top-name span {
         font-size: 6rem;
     }
 
-    /* G’s Flowers center */
+    /* G’s Flowers — center */
     .middle-name {
         font-size: 5rem;
         align-self: center;
+        margin: 0;
     }
 
     .middle-name span {
         font-size: 8rem;
     }
 
-    /* Ginger right */
+    /* Ginger — right, closer */
     .bottom-name {
         font-size: 3rem;
         align-self: flex-end;
         margin-right: 40px;
+        margin-top: 10px; /* moved closer */
     }
 
     .bottom-name span {
@@ -91,6 +94,7 @@
     }
 
     #nextBtn {
+        margin-top: 40px;
         margin-bottom: 180px;
         padding: 12px 28px;
         background: black;
@@ -358,226 +362,4 @@
         </button>
 
         <button id="closeNotes" 
-                style="padding:6px 12px; background:#444; color:white;
-                       border:none; border-radius:6px; cursor:pointer;">
-            Close
-        </button>
-    </div>
-</div>
-
-<script>
-/* ---------------- COVER SHEET TRANSITION ---------------- */
-document.getElementById("nextBtn").addEventListener("click", function() {
-    const cover = document.getElementById("coverSheet");
-    const page = document.getElementById("inventoryPage");
-
-    cover.style.opacity = "0";
-    setTimeout(() => {
-        cover.style.display = "none";
-        page.style.opacity = "1";
-        page.style.pointerEvents = "auto";
-    }, 800);
-});
-
-/* ---------------- GLOBAL for Notes Fix ---------------- */
-let activeNotesInput = null;
-
-/* ---------------- AUTO-SAVE FUNCTION ---------------- */
-function saveData() {
-    const rows = [];
-    document.querySelectorAll("#inventoryTable tr").forEach((tr, index) => {
-        if (index === 0) return;
-
-        const cells = tr.querySelectorAll("td");
-        if (cells.length === 0) return;
-
-        rows.push({
-            name: cells[0].querySelector("input")?.value || "",
-            quantity: cells[1].querySelector("input")?.value || "",
-            description: cells[2].querySelector("input")?.value || "",
-            price: cells[3].querySelector("input")?.value || "",
-            cashapp: cells[4].querySelector("select")?.value || "",
-            sold: cells[5].querySelector("input")?.checked || false,
-            inventoryCost: cells[6].querySelector("input")?.value || "",
-            profit: cells[7].querySelector("input")?.value || ""
-        });
-    });
-
-    localStorage.setItem("inventoryData", JSON.stringify(rows));
-}
-
-/* ---------------- ADD ROW FUNCTION ---------------- */
-function addRow(data = {}) {
-    const table = document.getElementById("inventoryTable");
-    const newRow = table.insertRow(-1);
-
-    newRow.innerHTML = `
-        <td><input type="text" value="${data.name || ""}"></td>
-        <td><input type="number" class="small-input quantity" value="${data.quantity || ""}"></td>
-        <td>
-            <div class="description-wrapper">
-                <input type="text" class="description-input" value="${data.description || ""}">
-                <span class="notes-icon">📝</span>
-            </div>
-        </td>
-        <td><input type="number" step="0.01" class="small-input price" value="${data.price || ""}"></td>
-
-        <td>
-            <select class="cashapp-select">
-                <option value="">—</option>
-                <option value="Cash" ${data.cashapp === "Cash" ? "selected" : ""}>Cash</option>
-                <option value="App" ${data.cashapp === "App" ? "selected" : ""}>App</option>
-            </select>
-        </td>
-
-        <td>
-            <label class="toggle">
-                <input type="checkbox" class="sold-toggle" ${data.sold ? "checked" : ""}>
-                <span class="slider"></span>
-            </label>
-        </td>
-
-        <td><input type="text" class="small-input inventory-cost" readonly value="${data.inventoryCost || "0.00"}"></td>
-        <td><input type="text" class="small-input profit" readonly value="${data.profit || "0.00"}"></td>
-        <td class="sold-badge-cell">
-            <span class="sold-badge">SOLD</span>
-        </td>
-    `;
-
-    if (data.sold) {
-        newRow.classList.add("sold-row");
-        newRow.querySelector(".sold-badge").style.opacity = "1";
-    }
-}
-
-/* ---------------- AUTO-LOAD FUNCTION ---------------- */
-function loadData() {
-    const saved = localStorage.getItem("inventoryData");
-
-    if (saved) {
-        const rows = JSON.parse(saved);
-        rows.forEach(data => addRow(data));
-    }
-
-    if (!saved || JSON.parse(saved).length === 0) {
-        addRow();
-    }
-}
-
-/* ---------------- INITIAL LOAD ---------------- */
-loadData();
-
-/* ---------------- NAVIGATION LOGIC ---------------- */
-document.getElementById("inventoryTable").addEventListener("keydown", function(e) {
-    const currentInput = e.target;
-    if (!currentInput.closest("tr")) return;
-
-    const row = currentInput.closest("tr");
-
-    const inputs = Array.from(
-        row.querySelectorAll("input:not([readonly]):not(.sold-toggle), select")
-    );
-
-    const index = inputs.indexOf(currentInput);
-    const lastInput = inputs[inputs.length - 1];
-
-    if (e.key === "Enter" || e.key === "Tab") {
-        e.preventDefault();
-
-        if (currentInput === lastInput) {
-            addRow();
-            saveData();
-            const lastRow = document.querySelectorAll("#inventoryTable tr");
-            lastRow[lastRow.length - 1].querySelector("input").focus();
-        } else {
-            inputs[index + 1].focus();
-        }
-    }
-});
-
-/* ---------------- AUTO-CALC + HIGHLIGHT + BADGE ---------------- */
-document.getElementById("inventoryTable").addEventListener("input", function(e) {
-    const row = e.target.closest("tr");
-    if (!row) return;
-
-    const price = parseFloat(row.querySelector(".price")?.value || 0);
-    const quantity = parseFloat(row.querySelector(".quantity")?.value || 0);
-    const sold = row.querySelector(".sold-toggle")?.checked;
-
-    const inventoryCost = row.querySelector(".inventory-cost");
-    const profit = row.querySelector(".profit");
-    const badge = row.querySelector(".sold-badge");
-
-    if (sold) {
-        profit.value = (price * quantity).toFixed(2);
-        inventoryCost.value = "0.00";
-        row.classList.add("sold-row");
-        badge.style.opacity = "1";
-    } else {
-        inventoryCost.value = (price * quantity).toFixed(2);
-        profit.value = "0.00";
-        row.classList.remove("sold-row");
-        badge.style.opacity = "0";
-    }
-
-    saveData();
-});
-
-/* ---------------- NOTES POPUP ---------------- */
-document.addEventListener("click", function(e) {
-    if (e.target.classList.contains("notes-icon")) {
-        const wrapper = e.target.closest(".description-wrapper");
-        const input = wrapper.querySelector(".description-input");
-
-        activeNotesInput = input;
-
-        document.getElementById("notesArea").value = input.value;
-
-        const popup = document.getElementById("notesPopup");
-        popup.style.display = "block";
-    }
-});
-
-document.getElementById("closeNotes").addEventListener("click", function() {
-    if (activeNotesInput) {
-        activeNotesInput.value = document.getElementById("notesArea").value;
-
-        const icon = activeNotesInput.closest(".description-wrapper").querySelector(".notes-icon");
-        if (activeNotesInput.value.trim() !== "") {
-            icon.classList.add("active");
-        } else {
-            icon.classList.remove("active");
-        }
-    }
-
-    document.getElementById("notesPopup").style.display = "none";
-    saveData();
-});
-
-document.getElementById("deleteNotes").addEventListener("click", function() {
-    if (activeNotesInput) {
-        activeNotesInput.value = "";
-        document.getElementById("notesArea").value = "";
-
-        const icon = activeNotesInput.closest(".description-wrapper").querySelector(".notes-icon");
-        icon.classList.remove("active");
-    }
-
-    saveData();
-});
-
-/* ---------------- RESET-BUT-SAVE ---------------- */
-document.getElementById("resetPageBtn").addEventListener("click", function() {
-    if (confirm("Clear the table but keep saved data?")) {
-        const rows = document.querySelectorAll("#inventoryTable tr");
-        rows.forEach((row, index) => {
-            if (index > 0) row.remove();
-        });
-        addRow();
-    }
-});
-</script>
-
-</body>
-</html>
-
+                style
