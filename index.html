@@ -12,7 +12,7 @@
         margin: 0;
         padding: 0;
         font-family: "Playfair Display", serif;
-        background: #F7DDE2; /* Soft boutique pink */
+        background: #F7DDE2;
         color: black;
         overflow-x: hidden;
         position: relative;
@@ -58,24 +58,32 @@
         font-family: "Great Vibes", cursive;
     }
 
+    /* Gaby left */
     .top-name {
         font-size: 3rem;
+        align-self: flex-start;
+        margin-left: 40px;
     }
 
     .top-name span {
         font-size: 6rem;
     }
 
+    /* G’s Flowers center */
     .middle-name {
         font-size: 5rem;
+        align-self: center;
     }
 
     .middle-name span {
         font-size: 8rem;
     }
 
+    /* Ginger right */
     .bottom-name {
         font-size: 3rem;
+        align-self: flex-end;
+        margin-right: 40px;
     }
 
     .bottom-name span {
@@ -83,7 +91,7 @@
     }
 
     #nextBtn {
-        margin-bottom: 40px;
+        margin-bottom: 180px;
         padding: 12px 28px;
         background: black;
         color: white;
@@ -133,14 +141,6 @@
         color: black;
     }
 
-    th:nth-child(3), td:nth-child(3) {
-        width: 40%;
-    }
-
-    th:nth-child(4), td:nth-child(4) {
-        width: 140px;
-    }
-
     th {
         background: rgba(0, 0, 0, 0.1);
         font-weight: 700;
@@ -154,7 +154,7 @@
         background: rgba(0, 0, 0, 0.02);
     }
 
-    input {
+    input, select {
         width: 100%;
         padding: 6px;
         font-size: 1rem;
@@ -326,6 +326,7 @@
         <th>Quantity</th>
         <th>Description</th>
         <th>Price</th>
+        <th>Cash/App</th>
         <th>Sold</th>
         <th>Inventory Cost</th>
         <th>Profit</th>
@@ -395,9 +396,10 @@ function saveData() {
             quantity: cells[1].querySelector("input")?.value || "",
             description: cells[2].querySelector("input")?.value || "",
             price: cells[3].querySelector("input")?.value || "",
-            sold: cells[4].querySelector("input")?.checked || false,
-            inventoryCost: cells[5].querySelector("input")?.value || "",
-            profit: cells[6].querySelector("input")?.value || ""
+            cashapp: cells[4].querySelector("select")?.value || "",
+            sold: cells[5].querySelector("input")?.checked || false,
+            inventoryCost: cells[6].querySelector("input")?.value || "",
+            profit: cells[7].querySelector("input")?.value || ""
         });
     });
 
@@ -419,12 +421,22 @@ function addRow(data = {}) {
             </div>
         </td>
         <td><input type="number" step="0.01" class="small-input price" value="${data.price || ""}"></td>
+
+        <td>
+            <select class="cashapp-select">
+                <option value="">—</option>
+                <option value="Cash" ${data.cashapp === "Cash" ? "selected" : ""}>Cash</option>
+                <option value="App" ${data.cashapp === "App" ? "selected" : ""}>App</option>
+            </select>
+        </td>
+
         <td>
             <label class="toggle">
                 <input type="checkbox" class="sold-toggle" ${data.sold ? "checked" : ""}>
                 <span class="slider"></span>
             </label>
         </td>
+
         <td><input type="text" class="small-input inventory-cost" readonly value="${data.inventoryCost || "0.00"}"></td>
         <td><input type="text" class="small-input profit" readonly value="${data.profit || "0.00"}"></td>
         <td class="sold-badge-cell">
@@ -463,7 +475,7 @@ document.getElementById("inventoryTable").addEventListener("keydown", function(e
     const row = currentInput.closest("tr");
 
     const inputs = Array.from(
-        row.querySelectorAll("input:not([readonly]):not(.sold-toggle)")
+        row.querySelectorAll("input:not([readonly]):not(.sold-toggle), select")
     );
 
     const index = inputs.indexOf(currentInput);
@@ -479,28 +491,6 @@ document.getElementById("inventoryTable").addEventListener("keydown", function(e
             lastRow[lastRow.length - 1].querySelector("input").focus();
         } else {
             inputs[index + 1].focus();
-        }
-    }
-
-    if (e.key === "ArrowDown") {
-        e.preventDefault();
-        const nextRow = row.nextElementSibling;
-        if (nextRow) {
-            const nextInputs = Array.from(
-                nextRow.querySelectorAll("input:not([readonly]):not(.sold-toggle)")
-            );
-            if (nextInputs[index]) nextInputs[index].focus();
-        }
-    }
-
-    if (e.key === "ArrowUp") {
-        e.preventDefault();
-        const prevRow = row.previousElementSibling;
-        if (prevRow && prevRow.rowIndex > 0) {
-            const prevInputs = Array.from(
-                prevRow.querySelectorAll("input:not([readonly]):not(.sold-toggle)")
-            );
-            if (prevInputs[index]) prevInputs[index].focus();
         }
     }
 });
