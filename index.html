@@ -18,7 +18,6 @@
         position: relative;
     }
 
-    /* ---------------- WATERMARK ---------------- */
     #watermark {
         position: fixed;
         top: 50%;
@@ -33,8 +32,7 @@
         z-index: 0;
     }
 
-    /* ---------------- COVER SHEET ---------------- */
-
+    /* COVER SHEET */
     #coverSheet {
         position: fixed;
         top: 0;
@@ -58,40 +56,28 @@
         font-family: "Great Vibes", cursive;
     }
 
-    /* Gaby — left, closer */
     .top-name {
         font-size: 3rem;
         align-self: flex-start;
         margin-left: 40px;
         margin-bottom: 10px;
     }
+    .top-name span { font-size: 6rem; }
 
-    .top-name span {
-        font-size: 6rem;
-    }
-
-    /* G’s Flowers — center */
     .middle-name {
         font-size: 5rem;
         align-self: center;
         margin: 0;
     }
+    .middle-name span { font-size: 8rem; }
 
-    .middle-name span {
-        font-size: 8rem;
-    }
-
-    /* Ginger — right, closer */
     .bottom-name {
         font-size: 3rem;
         align-self: flex-end;
         margin-right: 40px;
         margin-top: 10px;
     }
-
-    .bottom-name span {
-        font-size: 6rem;
-    }
+    .bottom-name span { font-size: 6rem; }
 
     #nextBtn {
         margin-top: 40px;
@@ -103,15 +89,9 @@
         border-radius: 8px;
         font-size: 1.4rem;
         cursor: pointer;
-        transition: 0.3s;
     }
 
-    #nextBtn:hover {
-        background: #444;
-    }
-
-    /* ---------------- INVENTORY PAGE ---------------- */
-
+    /* INVENTORY PAGE */
     #inventoryPage {
         opacity: 0;
         pointer-events: none;
@@ -150,13 +130,8 @@
         font-weight: 700;
     }
 
-    tr:nth-child(even) {
-        background: rgba(0, 0, 0, 0.05);
-    }
-
-    tr:nth-child(odd) {
-        background: rgba(0, 0, 0, 0.02);
-    }
+    tr:nth-child(even) { background: rgba(0, 0, 0, 0.05); }
+    tr:nth-child(odd) { background: rgba(0, 0, 0, 0.02); }
 
     input, select {
         width: 100%;
@@ -164,14 +139,11 @@
         font-size: 1rem;
         border: 1px solid #999;
         border-radius: 6px;
-        outline: none;
         background: white;
         color: black;
     }
 
-    .small-input {
-        width: 70px;
-    }
+    .small-input { width: 70px; }
 
     .description-wrapper {
         position: relative;
@@ -181,9 +153,6 @@
     .description-input {
         width: 100%;
         padding-right: 28px;
-        white-space: normal;
-        overflow-wrap: break-word;
-        word-wrap: break-word;
     }
 
     .notes-icon {
@@ -191,43 +160,27 @@
         right: 6px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 16px;
         opacity: 0.5;
         cursor: pointer;
-        transition: 0.2s;
     }
 
-    .notes-icon.active {
-        color: black;
-        opacity: 1;
-    }
+    .notes-icon.active { opacity: 1; }
 
-    .toggle {
-        width: 60px;
-        height: 30px;
-        position: relative;
-        display: inline-block;
-    }
-
-    .toggle input {
-        display: none;
-    }
+    .toggle { width: 60px; height: 30px; position: relative; display: inline-block; }
+    .toggle input { display: none; }
 
     .slider {
         position: absolute;
         cursor: pointer;
         background-color: #ccc;
         border-radius: 30px;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        top: 0; left: 0; right: 0; bottom: 0;
         transition: .3s;
     }
 
     .slider:before {
-        position: absolute;
         content: "";
+        position: absolute;
         height: 24px;
         width: 24px;
         left: 3px;
@@ -237,13 +190,8 @@
         transition: .3s;
     }
 
-    input:checked + .slider {
-        background-color: black;
-    }
-
-    input:checked + .slider:before {
-        transform: translateX(30px);
-    }
+    input:checked + .slider { background-color: black; }
+    input:checked + .slider:before { transform: translateX(30px); }
 
     #resetPageBtn {
         position: fixed;
@@ -252,72 +200,45 @@
         padding: 8px 14px;
         background: black;
         color: white;
-        border: none;
         border-radius: 6px;
         cursor: pointer;
-        font-weight: 700;
         z-index: 10;
     }
 
-    .sold-row {
-        background: rgba(0, 0, 0, 0.15) !important;
-        transition: 0.25s;
-    }
+    .sold-row { background: rgba(0, 0, 0, 0.15) !important; }
 
     .sold-badge {
-        display: inline-block;
         padding: 4px 10px;
         background: black;
         color: white;
         font-size: 0.9rem;
-        font-weight: 700;
         border-radius: 6px;
-        margin-left: 10px;
         opacity: 0;
-        transform: translateY(-2px);
-        transition: 0.25s ease;
+        transition: 0.25s;
     }
 
-    .sold-row .sold-badge {
-        opacity: 1;
-    }
+    .sold-row .sold-badge { opacity: 1; }
 
     #footerSignature {
         text-align: center;
         margin-top: 30px;
-        font-size: 1.2rem;
         opacity: 0.7;
-        letter-spacing: 1px;
-        font-family: "Playfair Display", serif;
     }
 </style>
 </head>
 <body>
 
-<!-- WATERMARK -->
 <div id="watermark">G</div>
 
-<!-- ---------------- COVER SHEET ---------------- -->
-
+<!-- COVER SHEET -->
 <div id="coverSheet">
-
-    <div class="cover-text top-name">
-        <span>G</span>aby
-    </div>
-
-    <div class="cover-text middle-name">
-        <span>G</span>'s Flowers
-    </div>
-
-    <div class="cover-text bottom-name">
-        <span>G</span>inger
-    </div>
-
+    <div class="cover-text top-name"><span>G</span>aby</div>
+    <div class="cover-text middle-name"><span>G</span>'s Flowers</div>
+    <div class="cover-text bottom-name"><span>G</span>inger</div>
     <button id="nextBtn">Next</button>
 </div>
 
-<!-- ---------------- INVENTORY PAGE ---------------- -->
-
+<!-- INVENTORY PAGE -->
 <div id="inventoryPage">
 
 <button id="resetPageBtn">Reset Page</button>
@@ -336,42 +257,44 @@
         <th>Profit</th>
         <th></th>
     </tr>
+
+    <!-- TOTALS ROW (A1) -->
+    <tr id="totalsRow">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><input id="totalInventoryCost" class="small-input" readonly value="0.00"></td>
+        <td><input id="totalProfit" class="small-input" readonly value="0.00"></td>
+        <td></td>
+    </tr>
 </table>
 
 <div id="footerSignature">Designed by Danny</div>
 
 </div>
 
-<!-- ---------------- NOTES POPUP ---------------- -->
-
+<!-- NOTES POPUP -->
 <div id="notesPopup" 
      style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
             background:white; padding:20px; border-radius:12px; width:300px; height:240px;
             box-shadow:0 0 20px rgba(0,0,0,0.3); z-index:9999;">
 
-    <h3 style="margin-top:0; color:black; font-family:'Playfair Display', serif;">Notes</h3>
+    <h3 style="margin-top:0;">Notes</h3>
 
-    <textarea id="notesArea" 
-              style="width:100%; height:120px; resize:none; font-size:1rem;"></textarea>
+    <textarea id="notesArea" style="width:100%; height:120px;"></textarea>
 
     <div style="display:flex; justify-content:space-between; margin-top:10px;">
-        <button id="deleteNotes" 
-                style="padding:6px 12px; background:black; color:white;
-                       border:none; border-radius:6px; cursor:pointer;">
-            Delete Notes
-        </button>
-
-        <button id="closeNotes" 
-                style="padding:6px 12px; background:#444; color:white;
-                       border:none; border-radius:6px; cursor:pointer;">
-            Close
-        </button>
+        <button id="deleteNotes" style="padding:6px 12px; background:black; color:white;">Delete Notes</button>
+        <button id="closeNotes" style="padding:6px 12px; background:#444; color:white;">Close</button>
     </div>
 </div>
 
 <script>
-/* ---------------- COVER SHEET TRANSITION ---------------- */
-document.getElementById("nextBtn").addEventListener("click", function() {
+/* COVER SHEET */
+document.getElementById("nextBtn").addEventListener("click", () => {
     const cover = document.getElementById("coverSheet");
     const page = document.getElementById("inventoryPage");
 
@@ -383,14 +306,14 @@ document.getElementById("nextBtn").addEventListener("click", function() {
     }, 800);
 });
 
-/* ---------------- GLOBAL for Notes Fix ---------------- */
+/* GLOBAL */
 let activeNotesInput = null;
 
-/* ---------------- AUTO-SAVE FUNCTION ---------------- */
+/* SAVE */
 function saveData() {
     const rows = [];
     document.querySelectorAll("#inventoryTable tr").forEach((tr, index) => {
-        if (index === 0) return;
+        if (index <= 1) return; // skip header + totals row
 
         const cells = tr.querySelectorAll("td");
         if (cells.length === 0) return;
@@ -401,19 +324,18 @@ function saveData() {
             description: cells[2].querySelector("input")?.value || "",
             price: cells[3].querySelector("input")?.value || "",
             cashapp: cells[4].querySelector("select")?.value || "",
-            sold: cells[5].querySelector("input")?.checked || false,
-            inventoryCost: cells[6].querySelector("input")?.value || "",
-            profit: cells[7].querySelector("input")?.value || ""
+            sold: cells[5].querySelector("input")?.checked || false
         });
     });
 
     localStorage.setItem("inventoryData", JSON.stringify(rows));
 }
 
-/* ---------------- ADD ROW FUNCTION ---------------- */
+/* ADD ROW */
 function addRow(data = {}) {
     const table = document.getElementById("inventoryTable");
-    const newRow = table.insertRow(-1);
+    const totalsRow = document.getElementById("totalsRow");
+    const newRow = table.insertRow(totalsRow.rowIndex + 1);
 
     newRow.innerHTML = `
         <td><input type="text" value="${data.name || ""}"></td>
@@ -441,11 +363,9 @@ function addRow(data = {}) {
             </label>
         </td>
 
-        <td><input type="text" class="small-input inventory-cost" readonly value="${data.inventoryCost || "0.00"}"></td>
-        <td><input type="text" class="small-input profit" readonly value="${data.profit || "0.00"}"></td>
-        <td class="sold-badge-cell">
-            <span class="sold-badge">SOLD</span>
-        </td>
+        <td></td>
+        <td></td>
+        <td><span class="sold-badge">SOLD</span></td>
     `;
 
     if (data.sold) {
@@ -454,93 +374,94 @@ function addRow(data = {}) {
     }
 }
 
-/* ---------------- AUTO-LOAD FUNCTION ---------------- */
+/* LOAD */
 function loadData() {
     const saved = localStorage.getItem("inventoryData");
 
     if (saved) {
-        const rows = JSON.parse(saved);
-        rows.forEach(data => addRow(data));
-    }
-
-    if (!saved || JSON.parse(saved).length === 0) {
+        JSON.parse(saved).forEach(data => addRow(data));
+    } else {
         addRow();
     }
+
+    updateTotals();
 }
 
-/* ---------------- INITIAL LOAD ---------------- */
+/* INITIAL LOAD */
 loadData();
 
-/* ---------------- NAVIGATION LOGIC ---------------- */
+/* NAVIGATION */
 document.getElementById("inventoryTable").addEventListener("keydown", function(e) {
     const currentInput = e.target;
     if (!currentInput.closest("tr")) return;
 
     const row = currentInput.closest("tr");
-
-    const inputs = Array.from(
-        row.querySelectorAll("input:not([readonly]):not(.sold-toggle), select")
-    );
-
+    const inputs = Array.from(row.querySelectorAll("input:not(.sold-toggle), select"));
     const index = inputs.indexOf(currentInput);
-    const lastInput = inputs[inputs.length - 1];
 
     if (e.key === "Enter" || e.key === "Tab") {
         e.preventDefault();
 
-        if (currentInput === lastInput) {
+        if (index === inputs.length - 1) {
             addRow();
             saveData();
-            const lastRow = document.querySelectorAll("#inventoryTable tr");
-            lastRow[lastRow.length - 1].querySelector("input").focus();
         } else {
             inputs[index + 1].focus();
         }
     }
 });
 
-/* ---------------- ORIGINAL PER-ROW LOGIC RESTORED ---------------- */
+/* TOTALS CALCULATION */
+function updateTotals() {
+    let totalInventory = 0;
+    let totalProfit = 0;
+
+    document.querySelectorAll("#inventoryTable tr").forEach((tr, index) => {
+        if (index <= 1) return;
+
+        const price = parseFloat(tr.querySelector(".price")?.value || 0);
+        const quantity = parseFloat(tr.querySelector(".quantity")?.value || 0);
+        const sold = tr.querySelector(".sold-toggle")?.checked;
+
+        if (sold) {
+            totalProfit += price * quantity;
+        } else {
+            totalInventory += price * quantity;
+        }
+    });
+
+    document.getElementById("totalInventoryCost").value = totalInventory.toFixed(2);
+    document.getElementById("totalProfit").value = totalProfit.toFixed(2);
+}
+
+/* INPUT LISTENER */
 document.getElementById("inventoryTable").addEventListener("input", function(e) {
     const row = e.target.closest("tr");
     if (!row) return;
 
-    const price = parseFloat(row.querySelector(".price")?.value || 0);
-    const quantity = parseFloat(row.querySelector(".quantity")?.value || 0);
     const sold = row.querySelector(".sold-toggle")?.checked;
-
-    const inventoryCost = row.querySelector(".inventory-cost");
-    const profit = row.querySelector(".profit");
     const badge = row.querySelector(".sold-badge");
 
     if (sold) {
-        // SOLD → Profit updates, Inventory Cost = 0
-        profit.value = (price * quantity).toFixed(2);
-        inventoryCost.value = "0.00";
         row.classList.add("sold-row");
         badge.style.opacity = "1";
     } else {
-        // NOT SOLD → Inventory Cost updates, Profit = 0
-        inventoryCost.value = (price * quantity).toFixed(2);
-        profit.value = "0.00";
         row.classList.remove("sold-row");
         badge.style.opacity = "0";
     }
 
+    updateTotals();
     saveData();
 });
 
-/* ---------------- NOTES POPUP ---------------- */
+/* NOTES POPUP */
 document.addEventListener("click", function(e) {
     if (e.target.classList.contains("notes-icon")) {
         const wrapper = e.target.closest(".description-wrapper");
-        const input = wrapper.querySelector(".description-input");
+        activeNotesInput = wrapper.querySelector(".description-input");
 
-        activeNotesInput = input;
-
-        document.getElementById("notesArea").value = input.value;
-
-        const popup = document.getElementById("notesPopup");
-        popup.style.display = "block";
+        document.getElementById("notesArea").value = activeNotesInput.value;
+        document.getElementById("notesPopup").style.display = "block";
     }
 });
 
@@ -549,11 +470,7 @@ document.getElementById("closeNotes").addEventListener("click", function() {
         activeNotesInput.value = document.getElementById("notesArea").value;
 
         const icon = activeNotesInput.closest(".description-wrapper").querySelector(".notes-icon");
-        if (activeNotesInput.value.trim() !== "") {
-            icon.classList.add("active");
-        } else {
-            icon.classList.remove("active");
-        }
+        icon.classList.toggle("active", activeNotesInput.value.trim() !== "");
     }
 
     document.getElementById("notesPopup").style.display = "none";
@@ -572,14 +489,14 @@ document.getElementById("deleteNotes").addEventListener("click", function() {
     saveData();
 });
 
-/* ---------------- RESET-BUT-SAVE ---------------- */
+/* RESET */
 document.getElementById("resetPageBtn").addEventListener("click", function() {
     if (confirm("Clear the table but keep saved data?")) {
-        const rows = document.querySelectorAll("#inventoryTable tr");
-        rows.forEach((row, index) => {
-            if (index > 0) row.remove();
+        document.querySelectorAll("#inventoryTable tr").forEach((row, index) => {
+            if (index > 1) row.remove();
         });
         addRow();
+        updateTotals();
     }
 });
 </script>
