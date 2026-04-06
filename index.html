@@ -1,484 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>G's Flowers Inventory</title>
+  <meta charset="UTF-8">
+  <title>G's Flowers Inventory</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
-<!-- Boutique Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
+  <style>
     body {
-        margin: 0;
-        padding: 0;
-        font-family: "Playfair Display", serif;
-        background: #F7DDE2;
-        color: black;
-        overflow-x: hidden;
-        position: relative;
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      background: #f9e3ea;
+      color: #000;
+      overflow-x: hidden;
     }
 
-    #watermark {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-family: "Great Vibes", cursive;
-        font-size: 22rem;
-        color: black;
-        opacity: 0.06;
-        pointer-events: none;
-        user-select: none;
-        z-index: 0;
-    }
-
-    /* COVER SHEET */
+    /* ---------------- COVER SHEET ---------------- */
     #coverSheet {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #F7DDE2;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 40px 20px;
-        text-align: center;
-        z-index: 9999;
-        transition: opacity 0.8s ease;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #f9e3ea;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 1;
+      transition: opacity 1.2s ease;
     }
 
     .cover-text {
-        font-weight: 700;
-        color: black;
-        font-family: "Great Vibes", cursive;
+      font-family: "Great Vibes", cursive;
+      text-align: center;
+      color: #000;
+      margin: 12px 0;
     }
 
-    .top-name {
-        font-size: 3rem;
-        align-self: flex-start;
-        margin-left: 40px;
-        margin-bottom: 10px;
-    }
-    .top-name span { font-size: 6rem; }
-
-    .middle-name {
-        font-size: 5rem;
-        align-self: center;
-        margin: 0;
-    }
-    .middle-name span { font-size: 8rem; }
-
-    .bottom-name {
-        font-size: 3rem;
-        align-self: flex-end;
-        margin-right: 40px;
-        margin-top: 10px;
-    }
-    .bottom-name span { font-size: 6rem; }
-
-    #nextBtn {
-        margin-top: 40px;
-        margin-bottom: 180px;
-        padding: 12px 28px;
-        background: black;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 1.4rem;
-        cursor: pointer;
+    .cover-gaby {
+      font-size: 48px;
     }
 
-    /* INVENTORY PAGE */
-    #inventoryPage {
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.8s ease;
-        padding: 20px;
-        position: relative;
-        z-index: 2;
+    .cover-gsflowers {
+      font-size: 72px;
     }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 3.2rem;
-        font-family: "Great Vibes", cursive;
-        font-weight: 400;
+    .cover-ginger {
+      font-size: 48px;
+    }
+
+    #enterBtn {
+      margin-top: 40px;
+      padding: 10px 24px;
+      background: #000;
+      color: #fff;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      font-family: "Playfair Display", serif;
+    }
+
+    #enterBtn:hover {
+      background: #333;
+    }
+
+    /* ---------------- TOTALS BAR ---------------- */
+    .totals-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-sizing: border-box;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .total-item {
+      flex: 1;
+      text-align: center;
+      padding: 4px 8px;
+    }
+
+    .total-label {
+      font-family: "Great Vibes", cursive;
+      font-size: 18px;
+      display: block;
+    }
+
+    .total-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* ---------------- CONTENT ---------------- */
+    .content {
+      padding: 100px 16px 24px;
+      opacity: 0;
+      transition: opacity 1.2s ease;
     }
 
     table {
-        width: 100%;
-        border-collapse: collapse;
-        background: rgba(255, 255, 255, 0.6);
-        border-radius: 12px;
-        overflow: hidden;
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
     }
 
     th, td {
-        padding: 12px;
-        padding-right: 20px;
-        text-align: left;
-        font-size: 1.2rem;
-        color: black;
+      border: 1px solid #ddd;
+      padding: 6px;
+      font-size: 13px;
+      text-align: center;
     }
 
     th {
-        background: rgba(0, 0, 0, 0.1);
-        font-weight: 700;
+      background: #f5c9d6;
+      position: sticky;
+      top: 80px;
+      z-index: 500;
     }
 
-    tr:nth-child(even) { background: rgba(0, 0, 0, 0.05); }
-    tr:nth-child(odd) { background: rgba(0, 0, 0, 0.02); }
-
-    input, select {
-        width: 100%;
-        padding: 6px;
-        font-size: 1rem;
-        border: 1px solid #999;
-        border-radius: 6px;
-        background: white;
-        color: black;
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2px 4px;
+      font-size: 12px;
     }
 
-    .small-input { width: 70px; }
-
-    .description-wrapper {
-        position: relative;
-        padding-right: 12px;
+    .small-input {
+      max-width: 80px;
     }
 
-    .notes-icon {
-        position: absolute;
-        right: 6px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        opacity: 0.4;
-        transition: 0.2s;
+    .checkbox-cell input {
+      transform: scale(1.1);
     }
 
-    .notes-icon.active {
-        opacity: 1;
-        color: black;
+    .add-row-btn {
+      margin-top: 8px;
+      padding: 6px 12px;
+      border: none;
+      background: #000;
+      color: #fff;
+      cursor: pointer;
+      font-family: "Playfair Display", serif;
+      font-size: 13px;
     }
 
-    /* SOLD BADGE */
-    .sold-badge {
-        opacity: 0;
-        transition: 0.3s ease;
-        font-weight: bold;
-        color: red;
+    .add-row-btn:hover {
+      background: #333;
     }
-
-    .sold-row {
-        background: rgba(255, 0, 0, 0.08) !important;
-    }
-
-    /* NOTES POPUP */
-    #notesPopup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        width: 300px;
-        z-index: 99999;
-        box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
-
-    #notesArea {
-        width: 100%;
-        height: 120px;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #aaa;
-        resize: none;
-    }
-
-    #closeNotes, #deleteNotes {
-        margin-top: 10px;
-        padding: 8px 16px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-
-    #closeNotes { background: black; color: white; }
-    #deleteNotes { background: red; color: white; }
-
-    /* RESET BUTTON */
-    #resetPageBtn {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background: black;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1.1rem;
-    }
-</style>
+  </style>
 </head>
 
 <body>
 
-<div id="watermark">G</div>
+  <!-- ---------------- COVER SHEET ---------------- -->
+  <div id="coverSheet">
+    <div class="cover-text cover-gaby">Gaby</div>
+    <div class="cover-text cover-gsflowers">G’s Flowers</div>
+    <div class="cover-text cover-ginger">Ginger</div>
+    <button id="enterBtn">Enter</button>
+  </div>
 
-<!-- COVER SHEET -->
-<div id="coverSheet">
-    <div class="top-name cover-text">G’s <span>Flowers</span></div>
-    <div class="middle-name cover-text">Inventory <span>Tool</span></div>
-    <div class="bottom-name cover-text">By <span>Danny</span></div>
-    <button id="nextBtn">Enter</button>
-</div>
+  <!-- ---------------- TOTALS BAR ---------------- -->
+  <div class="totals-bar" id="totalsBar">
+    <div class="total-item"><span class="total-label">Inventory Cost</span><span class="total-value" id="inventoryCostTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">Profit</span><span class="total-value" id="profitTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">Cash</span><span class="total-value" id="cashTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">App</span><span class="total-value" id="appTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">App Taxes</span><span class="total-value" id="appTaxTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">Gaby</span><span class="total-value" id="gabyTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">Ginger</span><span class="total-value" id="gingerTotal">$0.00</span></div>
+  </div>
 
-<!-- INVENTORY PAGE -->
-<div id="inventoryPage">
-    <h1>G’s Flowers Inventory</h1>
-
+  <!-- ---------------- MAIN CONTENT ---------------- -->
+  <div class="content" id="contentArea">
     <table id="inventoryTable">
+      <thead>
         <tr>
-            <th>Name</th>
-            <th>Qty</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Cash/App</th>
-            <th>Sold</th>
-            <th></th>
-            <th></th>
-            <th>Status</th>
+          <th>Name</th>
+          <th>Initials</th>
+          <th>Description</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Sold</th>
+          <th>Cash/App</th>
+          <th>App Tax</th>
         </tr>
+      </thead>
 
-        <!-- Totals Row -->
-        <tr id="totalsRow">
-            <td colspan="3"></td>
-            <td><input id="totalInventoryCost" type="text" readonly></td>
-            <td><input id="totalProfit" type="text" readonly></td>
-            <td colspan="4"></td>
+      <tbody id="inventoryBody">
+        <tr>
+          <td>
+            <select class="name-select">
+              <option value="">_</option>
+              <option value="Gaby">Gaby</option>
+              <option value="Ginger">Ginger</option>
+            </select>
+          </td>
+
+          <td>
+            <select class="initials-select small-input">
+              <option value="">_</option>
+              <option value="GMG">GMG</option>
+              <option value="GC">GC</option>
+            </select>
+          </td>
+
+          <td><input type="text" class="desc-input"></td>
+          <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
+          <td><input type="number" class="price-input small-input" min="0" step="0.01" value="0.00"></td>
+
+          <td class="checkbox-cell">
+            <input type="checkbox" class="sold-checkbox">
+          </td>
+
+          <td>
+            <select class="cashapp-select small-input">
+              <option value="">_</option>
+              <option value="Cash">Cash</option>
+              <option value="App">App</option>
+            </select>
+          </td>
+
+          <td class="app-tax-cell">$0.00</td>
         </tr>
+      </tbody>
     </table>
 
-    <button id="resetPageBtn">Reset Page</button>
-</div>
+    <button class="add-row-btn" id="addRowBtn">+ Add Row</button>
+  </div>
 
-<!-- NOTES POPUP -->
-<div id="notesPopup">
-    <textarea id="notesArea"></textarea>
-    <button id="closeNotes">Save</button>
-    <button id="deleteNotes">Delete</button>
-</div>
+  <!-- ---------------- SCRIPT ---------------- -->
+  <script>
+    /* Fade-out cover sheet, fade-in totals + content */
+    document.getElementById("enterBtn").addEventListener("click", () => {
+      const cover = document.getElementById("coverSheet");
+      const totals = document.getElementById("totalsBar");
+      const content = document.getElementById("contentArea");
 
-<script>
-/* COVER SHEET LOGIC */
-document.getElementById("nextBtn").addEventListener("click", function() {
-    document.getElementById("coverSheet").style.opacity = "0";
-    setTimeout(() => {
-        document.getElementById("coverSheet").style.display = "none";
-        const page = document.getElementById("inventoryPage");
-        page.style.opacity = "1";
-        page.style.pointerEvents = "auto";
-    }, 800);
-});
+      cover.style.opacity = "0";
 
-/* NOTES HANDLING */
-let activeNotesInput = null;
-
-/* SAVE */
-function saveData() {
-    const rows = [];
-    document.querySelectorAll("#inventoryTable tr").forEach((tr, index) => {
-        if (index <= 1) return;
-
-        const cells = tr.querySelectorAll("td");
-
-        rows.push({
-            name: cells[0].querySelector("input")?.value || "",
-            quantity: cells[1].querySelector("input")?.value || "",
-            description: cells[2].querySelector("input")?.value || "",
-            price: cells[3].querySelector("input")?.value || "",
-            cashapp: cells[4].querySelector("select")?.value || "",
-            sold: cells[5].querySelector("input")?.checked || false
-        });
+      setTimeout(() => {
+        cover.style.display = "none";
+        totals.style.opacity = "1";
+        content.style.opacity = "1";
+      }, 1200);
     });
 
-    localStorage.setItem("inventoryData", JSON.stringify(rows));
-}
-
-/* ADD ROW */
-function addRow(data = {}) {
-    const table = document.getElementById("inventoryTable");
-    const totalsRow = document.getElementById("totalsRow");
-    const newRow = table.insertRow(totalsRow.rowIndex + 1);
-
-    newRow.innerHTML = `
-        <td><input type="text" value="${data.name || ""}"></td>
-        <td><input type="number" class="small-input quantity" value="${data.quantity || ""}"></td>
-        <td>
-            <div class="description-wrapper">
-                <input type="text" class="description-input" value="${data.description || ""}">
-                <span class="notes-icon">📝</span>
-            </div>
-        </td>
-        <td><input type="number" step="0.01" class="small-input price" value="${data.price || ""}"></td>
-
-        <td>
-            <select class="cashapp-select">
-                <option value="">—</option>
-                <option value="Cash" ${data.cashapp === "Cash" ? "selected" : ""}>Cash</option>
-                <option value="App" ${data.cashapp === "App" ? "selected" : ""}>App</option>
-            </select>
-        </td>
-
-        <td>
-            <label class="toggle">
-                <input type="checkbox" class="sold-toggle" ${data.sold ? "checked" : ""}>
-                <span class="slider"></span>
-            </label>
-        </td>
-
-        <td></td>
-        <td></td>
-        <td><span class="sold-badge">SOLD</span></td>
-    `;
-
-    if (data.sold) {
-        newRow.classList.add("sold-row");
-        newRow.querySelector(".sold-badge").style.opacity = "1";
-    }
-}
-
-/* LOAD */
-function loadData() {
-    const saved = localStorage.getItem("inventoryData");
-
-    if (saved) {
-        JSON.parse(saved).forEach(data => addRow(data));
-    } else {
-        addRow();
+    /* Utility */
+    function parseNumber(v) {
+      const n = parseFloat(v);
+      return isNaN(n) ? 0 : n;
     }
 
-    updateTotals();
-}
+    function formatMoney(v) {
+      return "$" + v.toFixed(2);
+    }
 
-/* INITIAL LOAD */
-loadData();
+    /* Recalculate totals */
+    function recalc() {
+      const rows = [...document.querySelectorAll("#inventoryBody tr")];
 
-/* NAVIGATION */
-document.getElementById("inventoryTable").addEventListener("keydown", function(e) {
-    const currentInput = e.target;
-    if (!currentInput.closest("tr")) return;
+      let inv = 0, profit = 0, cash = 0, app = 0, appTaxTotal = 0, gaby = 0, ginger = 0;
 
-    const row = currentInput.closest("tr");
-    const inputs = Array.from(row.querySelectorAll("input:not(.sold-toggle), select"));
-    const index = inputs.indexOf(currentInput);
+      rows.forEach(row => {
+        const name = row.querySelector(".name-select").value;
+        const qty = parseNumber(row.querySelector(".qty-input").value);
+        const price = parseNumber(row.querySelector(".price-input").value);
+        const sold = row.querySelector(".sold-checkbox").checked;
+        const cashapp = row.querySelector(".cashapp-select").value;
 
-    if (e.key === "Enter" || e.key === "Tab") {
-        e.preventDefault();
+        const line = qty * price;
+        let appTax = 0;
 
-        if (index === inputs.length - 1) {
-            addRow();
-            saveData();
-        } else {
-            inputs[index + 1].focus();
+        if (!sold) inv += line;
+        if (sold) profit += line;
+
+        if (cashapp === "Cash") cash += line;
+        if (cashapp === "App") {
+          app += line;
+          appTax = line * 1.025 + 0.15;
+          appTaxTotal += appTax;
         }
+
+        if (name === "Gaby") gaby += line;
+        if (name === "Ginger") ginger += line;
+
+        row.querySelector(".app-tax-cell").textContent = formatMoney(appTax);
+      });
+
+      document.getElementById("inventoryCostTotal").textContent = formatMoney(inv);
+      document.getElementById("profitTotal").textContent = formatMoney(profit);
+      document.getElementById("cashTotal").textContent = formatMoney(cash);
+      document.getElementById("appTotal").textContent = formatMoney(app);
+      document.getElementById("appTaxTotal").textContent = formatMoney(appTaxTotal);
+      document.getElementById("gabyTotal").textContent = formatMoney(gaby);
+      document.getElementById("gingerTotal").textContent = formatMoney(ginger);
     }
-});
 
-/* TOTALS CALCULATION */
-function updateTotals() {
-    let totalInventory = 0;
-    let totalProfit = 0;
+    /* Auto-advance after Sold */
+    function autoAdvance(row) {
+      const rows = [...document.querySelectorAll("#inventoryBody tr")];
+      const idx = rows.indexOf(row);
 
-    document.querySelectorAll("#inventoryTable tr").forEach((tr, index) => {
-        if (index <= 1) return;
+      if (rows[idx + 1]) {
+        rows[idx + 1].querySelector(".name-select").focus();
+      } else {
+        const newRow = addRow();
+        newRow.querySelector(".name-select").focus();
+      }
+    }
 
-        const price = parseFloat(tr.querySelector(".price")?.value || 0);
-        const quantity = parseFloat(tr.querySelector(".quantity")?.value || 0);
-        const sold = tr.querySelector(".sold-toggle")?.checked;
+    /* Add row */
+    function addRow() {
+      const tbody = document.getElementById("inventoryBody");
+      const tr = document.createElement("tr");
 
-        if (sold) {
-            totalProfit += price * quantity;
-        } else {
-            totalInventory += price * quantity;
-        }
+      tr.innerHTML = `
+        <td>
+          <select class="name-select">
+            <option value="">_</option>
+            <option value="Gaby">Gaby</option>
+            <option value="Ginger">Ginger</option>
+          </select>
+        </td>
+        <td>
+          <select class="initials-select small-input">
+            <option value="">_</option>
+            <option value="GMG">GMG</option>
+            <option value="GC">GC</option>
+          </select>
+        </td>
+        <td><input type="text" class="desc-input"></td>
+        <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
+        <td><input type="number" class="price-input small-input" min="0" step="0.01" value="0.00"></td>
+        <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
+        <td>
+          <select class="cashapp-select small-input">
+            <option value="">_</option>
+            <option value="Cash">Cash</option>
+            <option value="App">App</option>
+          </select>
+        </td>
+        <td class="app-tax-cell">$0.00</td>
+      `;
+
+      tbody.appendChild(tr);
+      wireRow(tr);
+      recalc();
+      return tr;
+    }
+
+    /* Wire row events */
+    function wireRow(row) {
+      row.querySelectorAll("input, select").forEach(el => {
+        el.addEventListener("input", recalc);
+        el.addEventListener("change", recalc);
+      });
+
+      row.querySelector(".sold-checkbox").addEventListener("change", e => {
+        recalc();
+        if (e.target.checked) autoAdvance(row);
+      });
+    }
+
+    /* Init */
+    document.addEventListener("DOMContentLoaded", () => {
+      wireRow(document.querySelector("#inventoryBody tr"));
+      document.getElementById("addRowBtn").addEventListener("click", addRow);
+      recalc();
     });
-
-    document.getElementById("totalInventoryCost").value = totalInventory.toFixed(2);
-    document.getElementById("totalProfit").value = totalProfit.toFixed(2);
-}
-
-/* INPUT LISTENER */
-document.getElementById("inventoryTable").addEventListener("input", function(e) {
-    const row = e.target.closest("tr");
-    if (!row) return;
-
-    const sold = row.querySelector(".sold-toggle")?.checked;
-    const badge = row.querySelector(".sold-badge");
-
-    if (sold) {
-        row.classList.add("sold-row");
-        badge.style.opacity = "1";
-    } else {
-        row.classList.remove("sold-row");
-        badge.style.opacity = "0";
-    }
-
-    updateTotals();
-    saveData();
-});
-
-/* NOTES POPUP */
-document.addEventListener("click", function(e) {
-    if (e.target.classList.contains("notes-icon")) {
-        const wrapper = e.target.closest(".description-wrapper");
-        activeNotesInput = wrapper.querySelector(".description-input");
-
-        document.getElementById("notesArea").value = activeNotesInput.value;
-        document.getElementById("notesPopup").style.display = "block";
-    }
-});
-
-document.getElementById("closeNotes").addEventListener("click", function() {
-    if (activeNotesInput) {
-        activeNotesInput.value = document.getElementById("notesArea").value;
-
-        const icon = activeNotesInput.closest(".description-wrapper").querySelector(".notes-icon");
-        icon.classList.toggle("active", activeNotesInput.value.trim() !== "");
-    }
-
-    document.getElementById("notesPopup").style.display = "none";
-    saveData();
-});
-
-document.getElementById("deleteNotes").addEventListener("click", function() {
-    if (activeNotesInput) {
-        activeNotesInput.value = "";
-        document.getElementById("notesArea").value = "";
-
-        const icon = activeNotesInput.closest(".description-wrapper").querySelector(".notes-icon");
-        icon.classList.remove("active");
-    }
-
-    saveData();
-});
-
-/* RESET */
-document.getElementById("resetPageBtn").addEventListener("click", function() {
-    if (confirm("Clear the table but keep saved data?")) {
-        document.querySelectorAll("#inventoryTable tr").forEach((row, index) => {
-            if (index > 1) row.remove();
-        });
-        addRow();
-        updateTotals();
-    }
-});
-</script>
+  </script>
 
 </body>
 </html>
