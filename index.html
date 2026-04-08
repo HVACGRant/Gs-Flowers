@@ -21,17 +21,13 @@
       left: 0;
       right: 0;
       bottom: 0;
-
-      /* ✨ Soft paper texture background */
       background: #f9e3ea url('https://cdn.pixabay.com/photo/2016/11/29/03/53/paper-1868104_1280.jpg');
       background-size: cover;
       background-position: center;
-
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-
       z-index: 2000;
       opacity: 1;
       transition: opacity 1.2s ease;
@@ -45,7 +41,6 @@
       animation: fadeIn 2s ease forwards;
     }
 
-    /* 🌸 Soft watercolor bloom behind the text */
     .cover-wrapper::before {
       content: "";
       position: absolute;
@@ -62,13 +57,11 @@
       animation: fadeIn 2.5s ease forwards;
     }
 
-    /* ✨ Fade-in animation */
     @keyframes fadeIn {
       0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* G’s Flowers — elegant, centered */
     .cover-gsflowers {
       font-family: "Great Vibes", cursive;
       font-size: 140px;
@@ -76,11 +69,7 @@
       z-index: 3;
       line-height: 0.9;
       color: #000;
-
-      /* ✨ Soft glow */
       text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
-
-      /* ✨ Gold shimmer on hover */
       transition: color 0.6s ease, text-shadow 0.6s ease;
     }
 
@@ -89,7 +78,6 @@
       text-shadow: 0 0 18px rgba(212, 168, 87, 0.8);
     }
 
-    /* 🌺 Gold floral linework under the text */
     .cover-gsflowers::after {
       content: "";
       position: absolute;
@@ -115,8 +103,6 @@
       cursor: pointer;
       font-family: "Playfair Display", serif;
       z-index: 5;
-
-      /* ✨ Fade-in */
       animation: fadeIn 3.5s ease forwards;
     }
 
@@ -141,6 +127,15 @@
 
     #resetPageBtn:hover {
       background: #d93636;
+    }
+
+    /* ---------------- FADE GROUP (Gaby + Ginger) ---------------- */
+    .fadeGroup {
+      transition: opacity 0.4s ease;
+    }
+
+    .fadeGroup.hidden {
+      opacity: 0;
     }
 
     /* ---------------- TOTALS BAR ---------------- */
@@ -172,6 +167,7 @@
       font-family: "Great Vibes", cursive;
       font-size: 18px;
       display: block;
+      cursor: pointer;
     }
 
     .total-value {
@@ -232,19 +228,34 @@
 
   <!-- ---------------- TOTALS BAR ---------------- -->
   <div class="totals-bar" id="totalsBar">
+
     <div class="total-item"><span class="total-label">Inventory</span><span class="total-value" id="inventoryTotal">$0.00</span></div>
     <div class="total-item"><span class="total-label">Profit</span><span class="total-value" id="profitTotal">$0.00</span></div>
     <div class="total-item"><span class="total-label">Cash</span><span class="total-value" id="cashTotal">$0.00</span></div>
     <div class="total-item"><span class="total-label">App</span><span class="total-value" id="appTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">App Taxes</span><span class="total-value" id="appTaxTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">Gaby</span><span class="total-value" id="gabyTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">Ginger</span><span class="total-value" id="gingerTotal">$0.00</span></div>
+
+    <!-- CLICKABLE APP TAXES -->
+    <div class="total-item">
+      <span class="total-label" id="toggleFade">App Taxes</span>
+      <span class="total-value" id="appTaxTotal">$0.00</span>
+    </div>
+
+    <!-- FADE TARGETS -->
+    <div class="total-item fadeGroup">
+      <span class="total-label">Gaby</span>
+      <span class="total-value" id="gabyTotal">$0.00</span>
+    </div>
+
+    <div class="total-item fadeGroup">
+      <span class="total-label">Ginger</span>
+      <span class="total-value" id="gingerTotal">$0.00</span>
+    </div>
+
   </div>
 
   <!-- ---------------- MAIN CONTENT ---------------- -->
   <div class="content" id="contentArea">
 
-    <!-- RESET BUTTON -->
     <button id="resetPageBtn">Reset Page</button>
 
     <table id="inventoryTable">
@@ -316,15 +327,6 @@
       }, 1200);
     });
 
-    function parseNumber(v) {
-      const n = parseFloat(v);
-      return isNaN(n) ? 0 : n;
-    }
-
-    function formatMoney(v) {
-      return "$" + v.toFixed(2);
-    }
-
     /* Reset page but keep saved data */
     document.getElementById("resetPageBtn").addEventListener("click", () => {
       const inputs = document.querySelectorAll("input[type='text'], input[type='number']");
@@ -341,6 +343,22 @@
 
       recalc();
     });
+
+    /* Toggle fade for Gaby & Ginger totals only */
+    document.getElementById("toggleFade").addEventListener("click", () => {
+      document.querySelectorAll(".fadeGroup").forEach(el => {
+        el.classList.toggle("hidden");
+      });
+    });
+
+    function parseNumber(v) {
+      const n = parseFloat(v);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function formatMoney(v) {
+      return "$" + v.toFixed(2);
+    }
 
     /* Recalculate totals */
     function recalc() {
