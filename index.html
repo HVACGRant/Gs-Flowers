@@ -38,35 +38,45 @@
       height: 320px;
     }
 
-    /* G’s Flowers — smaller (120px) */
+    /* 🌸 Soft watercolor bloom behind the text */
+    .cover-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 420px;
+      height: 420px;
+      transform: translate(-50%, -50%);
+      background-image: url('https://i.imgur.com/8yq4w2G.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.25;
+      z-index: 1;
+    }
+
+    /* G’s Flowers — elegant, centered */
     .cover-gsflowers {
       font-family: "Great Vibes", cursive;
-      font-size: 120px;
+      font-size: 140px;
       position: relative;
-      z-index: 2;
+      z-index: 3;
       line-height: 0.9;
+      color: #000;
     }
 
-    /* Gaby — Y sits one space before G */
-    .cover-gaby {
-      font-family: "Great Vibes", cursive;
-      font-size: 40px;
+    /* 🌺 Gold floral linework under the text */
+    .cover-gsflowers::after {
+      content: "";
       position: absolute;
       left: 50%;
-      transform: translateX(-52%);
-      bottom: 170px;
-      z-index: 3;
-    }
-
-    /* Ginger — G sits one space before s */
-    .cover-ginger {
-      font-family: "Great Vibes", cursive;
-      font-size: 40px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(6%);
-      top: 170px;
-      z-index: 3;
+      bottom: -20px;
+      transform: translateX(-50%);
+      width: 260px;
+      height: 60px;
+      background-image: url('https://i.imgur.com/2vYxq6S.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.8;
     }
 
     #enterBtn {
@@ -165,9 +175,7 @@
   <!-- ---------------- COVER SHEET ---------------- -->
   <div id="coverSheet">
     <div class="cover-wrapper">
-      <div class="cover-text cover-gaby">Gaby</div>
       <div class="cover-text cover-gsflowers">G’s Flowers</div>
-      <div class="cover-text cover-ginger">Ginger</div>
     </div>
     <button id="enterBtn">Enter</button>
   </div>
