@@ -21,11 +21,17 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: #f9e3ea;
+
+      /* ✨ Soft paper texture background */
+      background: #f9e3ea url('https://cdn.pixabay.com/photo/2016/11/29/03/53/paper-1868104_1280.jpg');
+      background-size: cover;
+      background-position: center;
+
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+
       z-index: 2000;
       opacity: 1;
       transition: opacity 1.2s ease;
@@ -36,9 +42,10 @@
       text-align: center;
       width: 100%;
       height: 320px;
+      animation: fadeIn 2s ease forwards;
     }
 
-    /* 🌸 Soft watercolor bloom behind the text (NEW stable image) */
+    /* 🌸 Soft watercolor bloom behind the text */
     .cover-wrapper::before {
       content: "";
       position: absolute;
@@ -52,6 +59,13 @@
       background-repeat: no-repeat;
       opacity: 0.25;
       z-index: 1;
+      animation: fadeIn 2.5s ease forwards;
+    }
+
+    /* ✨ Fade-in animation */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     /* G’s Flowers — elegant, centered */
@@ -62,9 +76,20 @@
       z-index: 3;
       line-height: 0.9;
       color: #000;
+
+      /* ✨ Soft glow */
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+
+      /* ✨ Gold shimmer on hover */
+      transition: color 0.6s ease, text-shadow 0.6s ease;
     }
 
-    /* 🌺 Gold floral linework under the text (NEW stable image) */
+    .cover-gsflowers:hover {
+      color: #d4a857;
+      text-shadow: 0 0 18px rgba(212, 168, 87, 0.8);
+    }
+
+    /* 🌺 Gold floral linework under the text */
     .cover-gsflowers::after {
       content: "";
       position: absolute;
@@ -77,6 +102,7 @@
       background-size: contain;
       background-repeat: no-repeat;
       opacity: 0.8;
+      animation: fadeIn 3s ease forwards;
     }
 
     #enterBtn {
@@ -89,9 +115,16 @@
       cursor: pointer;
       font-family: "Playfair Display", serif;
       z-index: 5;
+
+      /* ✨ Fade-in */
+      animation: fadeIn 3.5s ease forwards;
     }
 
-    #enterBtn:hover { background: #333; }
+    #enterBtn:hover {
+      background: #333;
+      transform: scale(1.05);
+      transition: 0.3s ease;
+    }
 
     /* ---------------- TOTALS BAR ---------------- */
     .totals-bar {
