@@ -126,6 +126,23 @@
       transition: 0.3s ease;
     }
 
+    /* ---------------- RESET BUTTON ---------------- */
+    #resetPageBtn {
+      margin-bottom: 12px;
+      padding: 6px 14px;
+      background: #ff4d4d;
+      color: #fff;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    #resetPageBtn:hover {
+      background: #d93636;
+    }
+
     /* ---------------- TOTALS BAR ---------------- */
     .totals-bar {
       position: fixed;
@@ -226,6 +243,10 @@
 
   <!-- ---------------- MAIN CONTENT ---------------- -->
   <div class="content" id="contentArea">
+
+    <!-- RESET BUTTON -->
+    <button id="resetPageBtn">Reset Page</button>
+
     <table id="inventoryTable">
       <thead>
         <tr>
@@ -303,6 +324,23 @@
     function formatMoney(v) {
       return "$" + v.toFixed(2);
     }
+
+    /* Reset page but keep saved data */
+    document.getElementById("resetPageBtn").addEventListener("click", () => {
+      const inputs = document.querySelectorAll("input[type='text'], input[type='number']");
+      inputs.forEach(i => i.value = "");
+
+      const selects = document.querySelectorAll("select");
+      selects.forEach(s => s.value = "");
+
+      const checks = document.querySelectorAll("input[type='checkbox']");
+      checks.forEach(c => c.checked = false);
+
+      const taxCells = document.querySelectorAll(".app-tax-cell");
+      taxCells.forEach(c => c.textContent = "$0.00");
+
+      recalc();
+    });
 
     /* Recalculate totals */
     function recalc() {
