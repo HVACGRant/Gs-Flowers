@@ -115,7 +115,6 @@
       transform: scale(1.05);
       transition: 0.3s ease;
     }
-
     /* ---------------- RESET BUTTON ---------------- */
     #resetPageBtn {
       margin-bottom: 12px;
@@ -186,103 +185,7 @@
         flex-wrap: wrap;
         padding: 8px;
       }
-      .total-item {
-        flex: 1 1 50%;
-        padding: 6px 0;
-      }
-      .total-label { font-size: 16px; }
-      .total-value { font-size: 14px; }
-    }
-
-    /* ---------------- CONTENT ---------------- */
-    .content {
-      padding: 100px 16px 24px;
-      opacity: 0;
-      transition: opacity 1.2s ease;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px 4px;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    th {
-      background: #f5c9d6;
-      position: sticky;
-      top: 80px;
-      z-index: 500;
-    }
-
-    /* ---------------- INPUTS ---------------- */
-    input[type="text"],
-    input[type="number"],
-    select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 4px 6px;
-      font-size: 16px;
-      min-height: 36px;
-    }
-
-    .small-input { max-width: 80px; }
-
-    .checkbox-cell input {
-      transform: scale(1.4);
-    }
-
-    @media (max-width: 600px) {
-      .cover-gsflowers { font-size: 80px; }
-      .cover-wrapper::before { width: 260px; height: 260px; }
-      #enterBtn { font-size: 16px; padding: 8px 20px; }
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- ---------------- COVER SHEET ---------------- -->
-  <div id="coverSheet">
-    <div class="cover-wrapper">
-      <div class="cover-text cover-gsflowers">G’s Flowers</div>
-    </div>
-    <button id="enterBtn">Enter</button>
-  </div>
-
-  <!-- ---------------- TOTALS BAR ---------------- -->
-  <div class="totals-bar" id="totalsBar">
-
-    <div class="total-item"><span class="total-label">Inventory</span><span class="total-value" id="inventoryTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">Profit</span><span class="total-value" id="profitTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">Cash</span><span class="total-value" id="cashTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">App</span><span class="total-value" id="appTotal">$0.00</span></div>
-
-    <div class="total-item">
-      <span class="total-label" id="toggleFade">App Taxes</span>
-      <span class="total-value" id="appTaxTotal">$0.00</span>
-    </div>
-
-    <div class="total-item fadeGroup">
-      <span class="total-label">Gaby</span>
-      <span class="total-value" id="gabyTotal">$0.00</span>
-    </div>
-
-    <div class="total-item fadeGroup">
-      <span class="total-label">Ginger</span>
-      <span class="total-value" id="gingerTotal">$0.00</span>
-    </div>
-
-  </div>
-
+      .total-item
   <!-- ---------------- MAIN CONTENT ---------------- -->
   <div class="content" id="contentArea">
 
@@ -347,52 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* Fade-out cover sheet */
   document.getElementById("enterBtn").addEventListener("click", () => {
-    const cover = document.getElementById("coverSheet");
-    const totals = document.getElementById("totalsBar");
-    const content = document.getElementById("contentArea");
-
-    cover.style.opacity = "0";
-
-    setTimeout(() => {
-      cover.style.display = "none";
-      totals.style.opacity = "1";
-      content.style.opacity = "1";
-    }, 1200);
-  });
-
-  /* Reset page but keep saved data */
-  document.getElementById("resetPageBtn").addEventListener("click", () => {
-    const inputs = document.querySelectorAll("input[type='text'], input[type='number']");
-    inputs.forEach(i => i.value = "");
-
-    const selects = document.querySelectorAll("select");
-    selects.forEach(s => s.value = "");
-
-    const checks = document.querySelectorAll("input[type='checkbox']");
-    checks.forEach(c => c.checked = false);
-
-    const taxCells = document.querySelectorAll(".app-tax-cell");
-    taxCells.forEach(c => c.textContent = "$0.00");
-
-    recalc();
-  });
-
-  /* Toggle fade for Gaby & Ginger totals only */
-  document.getElementById("toggleFade").addEventListener("click", () => {
-    document.querySelectorAll(".fadeGroup").forEach(el => {
-      el.classList.toggle("hidden");
-    });
-  });
-
-  function parseNumber(v) {
-    const n = parseFloat(v);
-    return isNaN(n) ? 0 : n;
-  }
-
-  function formatMoney(v) {
-    return "$" + v.toFixed(2);
-  }
-
   /* Recalculate totals */
   function recalc() {
     const rows = [...document.querySelectorAll("#inventoryBody tr")];
@@ -520,4 +377,28 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.key === "Enter") {
         e.preventDefault();
         const newRow = addRow();
-        newRow.query
+        newRow.querySelector(".name-select").focus();
+      }
+
+      if (e.key === "Tab" && !e.shiftKey) {
+        const newRow = addRow();
+        newRow.querySelector(".name-select").focus();
+      }
+    });
+  }
+    });
+  }
+
+  /* Wire the very first row on page load */
+  wireRow(document.querySelector("#inventoryBody tr"));
+
+  /* Initial calculation */
+  recalc();
+
+}); // END DOMContentLoaded
+
+  </script>
+
+</body>
+</html>
+
