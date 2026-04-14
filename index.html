@@ -1,891 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DG Diagnostic Tool – Technician Edition</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-    * { box-sizing: border-box; }
+  <title>G's Flowers Inventory</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f2f2f2;
-        margin: 0;
-        padding: 0;
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      background: #f9e3ea;
+      color: #000;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
-    /* ── PAGE SYSTEM ── */
-    .page { display: none; }
-    .page.active { display: block; }
-
-    /* ── COVER SHEET ── */
-    .cover-page {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: #ffffff;
-        padding: 40px 20px;
+    /* ---------------- COVER SHEET ---------------- */
+    #coverSheet {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #f9e3ea url('https://cdn.pixabay.com/photo/2016/11/29/03/53/paper-1868104_1280.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 1;
+      transition: opacity 1.2s ease;
     }
-    .cover-logo {
-        width: 200px;
+
+    .cover-wrapper {
+      position: relative;
+      text-align: center;
+      width: 100%;
+      height: 320px;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    .cover-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 420px;
+      height: 420px;
+      transform: translate(-50%, -50%);
+      background-image: url('https://cdn.pixabay.com/photo/2017/08/30/07/52/flower-2695079_1280.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.25;
+      z-index: 1;
+      animation: fadeIn 2.5s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .cover-gsflowers {
+      font-family: "Great Vibes", cursive;
+      font-size: 140px;
+      position: relative;
+      z-index: 3;
+      line-height: 0.9;
+      color: #000;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+      transition: color 0.6s ease, text-shadow 0.6s ease;
+    }
+
+    .cover-gsflowers:hover {
+      color: #d4a857;
+      text-shadow: 0 0 18px rgba(212, 168, 87, 0.8);
+    }
+
+    .cover-gsflowers::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -20px;
+      transform: translateX(-50%);
+      width: 260px;
+      height: 60px;
+      background-image: url('https://cdn.pixabay.com/photo/2016/12/23/14/44/divider-1921600_1280.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.8;
+      animation: fadeIn 3s ease forwards;
+    }
+
+    #enterBtn {
+      margin-top: 40px;
+      padding: 10px 24px;
+      background: #000;
+      color: #fff;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      font-family: "Playfair Display", serif;
+      z-index: 5;
+      animation: fadeIn 3.5s ease forwards;
+    }
+
+    #enterBtn:hover {
+      background: #333;
+      transform: scale(1.05);
+      transition: 0.3s ease;
+    }
+    /* ---------------- RESET BUTTON ---------------- */
+    #resetPageBtn {
+      margin-bottom: 12px;
+      padding: 8px 16px;
+      background: #ff4d4d;
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    #resetPageBtn:hover {
+      background: #d93636;
+    }
+
+    /* ---------------- FADE GROUP ---------------- */
+    .fadeGroup {
+      transition: opacity 0.4s ease;
+    }
+
+    .fadeGroup.hidden {
+      opacity: 0;
+    }
+
+    /* ---------------- TOTALS BAR ---------------- */
+    .totals-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-sizing: border-box;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .total-item {
+      flex: 1;
+      text-align: center;
+      padding: 4px 8px;
+    }
+
+    .total-label {
+      font-family: "Great Vibes", cursive;
+      font-size: 18px;
+      display: block;
+      cursor: pointer;
+    }
+
+    .total-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* ---------------- MOBILE TOTALS ---------------- */
+    @media (max-width: 600px) {
+      .totals-bar {
         height: auto;
-        margin-bottom: 48px;
-    }
-    .cover-title {
-        font-size: 26px;
-        font-weight: 700;
-        color: #222;
-        text-align: center;
-        letter-spacing: 0.5px;
-        margin-bottom: 12px;
-    }
-    .cover-credit {
-        font-size: 14px;
-        color: #888;
-        text-align: center;
-        margin-bottom: 48px;
-        letter-spacing: 0.3px;
-    }
-    .nav-btn {
-        padding: 12px 48px;
-        font-size: 16px;
-        font-weight: 700;
-        background: #0078d4;
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        letter-spacing: 0.5px;
-        transition: background .15s;
-    }
-    .nav-btn:hover { background: #005fa3; }
-    .nav-btn:active { background: #004578; }
+        flex-wrap: wrap;
+        padding: 8px;
+      }
+      .total-item
+  <!-- ---------------- MAIN CONTENT ---------------- -->
+  <div class="content" id="contentArea">
 
-    /* ── LITERATURE PAGE ── */
-    .lit-page {
-        max-width: 900px;
-        margin: 0 auto;
-        background: #ffffff;
-        border-radius: 6px;
-        padding: 20px 24px 32px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    .lit-page h1 {
-        text-align: center;
-        font-size: 22px;
-        color: #222;
-        margin: 0 0 20px 0;
-    }
-    .lit-section {
-        margin-bottom: 18px;
-        border-radius: 4px;
-        overflow: hidden;
-        border: 1px solid #ddd;
-    }
-    .lit-header {
-        padding: 8px 12px;
-        font-weight: 700;
-        font-size: 14px;
-        color: #fff;
-    }
-    .lit-header.blue    { background: #2a6496; }
-    .lit-header.green   { background: #3a7d44; }
-    .lit-header.orange  { background: #d4820a; }
-    .lit-header.red     { background: #b33030; }
-    .lit-header.purple  { background: #6b3fa0; }
-    .lit-header.teal    { background: #1a7a7a; }
-    .lit-body {
-        padding: 10px 14px;
-        background: #fafafa;
-        font-size: 13px;
-        line-height: 1.65;
-        color: #333;
-    }
-    .lit-body ol {
-        margin: 4px 0;
-        padding-left: 22px;
-    }
-    .lit-body ol li {
-        margin-bottom: 4px;
-    }
-    .lit-body ul {
-        margin: 4px 0;
-        padding-left: 20px;
-    }
-    .lit-body ul li {
-        margin-bottom: 4px;
-    }
-    .lit-body .ref-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 6px 0;
-        font-size: 13px;
-    }
-    .lit-body .ref-table th,
-    .lit-body .ref-table td {
-        border: 1px solid #ccc;
-        padding: 4px 8px;
-        text-align: left;
-    }
-    .lit-body .ref-table th {
-        background: #eee;
-        font-weight: 600;
-    }
-    .lit-nav {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin-top: 20px;
-    }
-    .nav-btn-outline {
-        padding: 10px 36px;
-        font-size: 14px;
-        font-weight: 700;
-        background: #fff;
-        color: #0078d4;
-        border: 2px solid #0078d4;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all .15s;
-    }
-    .nav-btn-outline:hover { background: #f0f7ff; }
+    <button id="resetPageBtn">Reset Page</button>
 
-    /* ── DIAGNOSTIC TOOL ── */
-    .tool-container {
-        max-width: 900px;
-        margin: 0 auto;
-        background: #ffffff;
-        border-radius: 6px;
-        padding: 16px 20px 24px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    .logo-container {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 8px;
-    }
-    .dg-logo {
-        width: 180px;
-        height: auto;
-        display: block;
-        margin: 0 auto 8px auto;
-    }
-    .subtitle {
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-        color: #444;
-        margin-bottom: 10px;
-        letter-spacing: 0.5px;
-    }
-    .divider {
-        width: 100%;
-        height: 2px;
-        background: #d0d0d0;
-        margin: 8px 0 14px 0;
-        border-radius: 2px;
-    }
-    #resetBtn {
-        width: 90px;
-        padding: 4px 6px;
-        font-size: 12px;
-        font-weight: 700;
-        background: #ff4444;
-        color: #fff;
-        border: 2px solid #000;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-bottom: 12px;
-        display: block;
-    }
-    .section {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 12px;
-        overflow: hidden;
-    }
-    .section-header {
-        background: #ffe680;
-        padding: 8px 10px;
-        font-weight: bold;
-        cursor: pointer;
-        user-select: none;
-    }
-    .section-content {
-        padding: 10px;
-        display: none;
-        background: #fafafa;
-    }
-    .section-content.active {
-        display: flex;
-        gap: 24px;
-    }
-    .section-content.single-col.active {
-        display: block;
-    }
-    .column {
-        flex: 1;
-        min-width: 0;
-    }
-    label {
-        display: block;
-        font-size: 13px;
-        margin-top: 6px;
-        margin-bottom: 2px;
-    }
-    input[type="number"],
-    input[type="text"] {
-        width: 65px;
-        padding: 2px 4px;
-        font-size: 12px;
-        border: 1px solid #999;
-        border-radius: 3px;
-    }
+    <table id="inventoryTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Sold</th>
+          <th>Cash/App</th>
+          <th>Initials</th>
+          <th>App Tax</th>
+        </tr>
+      </thead>
 
-    /* ── Feedback Strip ── */
-    .feedback-card {
-        background: #ffffff;
-        border: 1px solid #d0d4da;
-        border-radius: 10px;
-        width: 100%;
-        max-width: 420px;
-        margin: 1.2rem auto;
-        padding: 1.4rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    }
-    .feedback-card h2 {
-        font-size: 1.05rem;
-        font-weight: 700;
-        margin: 0 0 .15rem;
-    }
-    .feedback-card .fb-sub {
-        font-size: .82rem;
-        color: #6b7280;
-        margin-bottom: 1rem;
-    }
-    .fb-stars {
-        display: flex;
-        gap: .35rem;
-        margin-bottom: 1rem;
-    }
-    .fb-stars span {
-        font-size: 2rem;
-        cursor: pointer;
-        color: #c5cad2;
-        transition: color .15s, transform .15s;
-        user-select: none;
-        -webkit-user-select: none;
-    }
-    .fb-stars span.active { color: #f59e0b; }
-    .fb-stars span:hover  { transform: scale(1.15); }
-    #fbComment {
-        width: 100%;
-        border: 1px solid #d0d4da;
-        border-radius: 6px;
-        padding: .55rem .65rem;
-        font-size: .88rem;
-        font-family: inherit;
-        resize: vertical;
-        min-height: 64px;
-        box-sizing: border-box;
-    }
-    #fbComment:focus {
-        outline: none;
-        border-color: #0078d4;
-        box-shadow: 0 0 0 2px rgba(0,120,212,.15);
-    }
-    .fb-btn-row {
-        display: flex;
-        align-items: center;
-        gap: .75rem;
-        margin-top: .75rem;
-    }
-    #fbSend {
-        padding: .5rem 1.4rem;
-        border: none;
-        border-radius: 6px;
-        font-size: .88rem;
-        font-weight: 600;
-        cursor: pointer;
-        background: #0078d4;
-        color: #fff;
-    }
-    #fbSend:hover:not(:disabled) { background: #005fa3; }
-    #fbSend:disabled { opacity: .45; cursor: default; }
-    .fb-status { font-size: .82rem; color: #6b7280; }
-    .fb-status.success { color: #16a34a; font-weight: 600; }
-    .fb-status.error   { color: #dc2626; font-weight: 600; }
-    .fb-device {
-        margin-top: 1rem;
-        padding-top: .6rem;
-        border-top: 1px solid #e5e7eb;
-        font-size: .72rem;
-        color: #9ca3af;
-        text-align: center;
-    }
-</style>
-</head>
+      <tbody id="inventoryBody">
+        <tr>
+          <td>
+            <select class="name-select">
+              <option value="">_</option>
+              <option value="Gaby">Gaby</option>
+              <option value="Ginger">Ginger</option>
+            </select>
+          </td>
 
-<body>
+          <td><input type="text" class="desc-input"></td>
+          <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
+          <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- PAGE 1: COVER SHEET                        -->
-<!-- ═══════════════════════════════════════════ -->
-<div class="page active" id="pageCover">
-    <div class="cover-page">
-        <img src="DG-LOGO.png" class="cover-logo" alt="DG Logo">
-        <div class="cover-title">Hybrid HWT Diagnostic Tool</div>
-        <div class="cover-credit">Created by Danny G.</div>
-        <button class="nav-btn" onclick="goToPage('pageLit')">Next</button>
-    </div>
-</div>
+          <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- PAGE 2: LITERATURE / REFERENCE             -->
-<!-- ═══════════════════════════════════════════ -->
-<div class="page" id="pageLit">
-<div style="padding: 20px;">
-<div class="lit-page">
+          <td>
+            <select class="cashapp-select small-input">
+              <option value="">_</option>
+              <option value="Cash">Cash</option>
+              <option value="App">App</option>
+            </select>
+          </td>
 
-    <h1>Diagnostic Reference Guide</h1>
+          <td>
+            <select class="initials-select small-input">
+              <option value="">_</option>
+              <option value="GMG">GMG</option>
+              <option value="GC">GC</option>
+            </select>
+          </td>
 
-    <!-- THERMISTOR READINGS -->
-    <div class="lit-section">
-        <div class="lit-header blue">Thermistor Readings</div>
-        <div class="lit-body">
-            <p>Get Room Temp with Thermometer, Get Water Temp from Controller</p>
-            <ol>
-                <li>Hold <strong>MODE</strong> and <strong>NEXT</strong> — you should get <strong>TST</strong></li>
-                <li>Press the <strong>DOWN</strong> arrow until <strong>CP</strong> appears</li>
-                <li>Press Enter and wait for display to show <strong>CP ON</strong> (Compressor On)</li>
-                <li>Press Enter, enter reading for <strong>DT Temp</strong> (Discharge)</li>
-                <li>Press Enter, enter reading for <strong>ST Temp</strong> (Suction)</li>
-                <li>Press Enter, enter reading for <strong>ET Temp</strong> (Evaporator)</li>
-                <li>Press Enter, enter reading for <strong>AT Temp</strong> (Ambient)</li>
-                <li>Press Enter, enter reading for <strong>ST Temp</strong></li>
-                <li>Press Enter, enter reading for <strong>Current</strong> (CURR)</li>
-                <li><strong>Repeat steps again</strong></li>
-            </ol>
-        </div>
-    </div>
+          <td class="app-tax-cell">$0.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- ELEMENT READINGS -->
-    <div class="lit-section">
-        <div class="lit-header blue">Element Readings</div>
-        <div class="lit-body">
-            <ol>
-                <li>Hold <strong>MODE</strong> and <strong>NEXT</strong> — you should get <strong>TST</strong></li>
-                <li>Press the <strong>UP</strong> arrow once, <strong>UE</strong> is displayed</li>
-                <li>Press Enter, enter <strong>UT Tank Temp</strong> (Upper Tank Temp)</li>
-                <li>Press Enter button twice, wait for current to stabilize, enter reading for <strong>UE CURR</strong> (Upper Element Current)</li>
-                <li>Hold <strong>MODE</strong> and <strong>NEXT</strong> — you should get <strong>TST</strong></li>
-                <li>Press the <strong>UP</strong> arrow twice, <strong>LE</strong> is displayed</li>
-                <li>Press Enter, enter <strong>LT Tank Temp</strong> (Lower Tank Temp)</li>
-                <li>Press Enter button twice, wait for current to stabilize, enter reading for <strong>LE CURR</strong> (Lower Element Current)</li>
-            </ol>
-        </div>
-    </div>
-
-    <!-- IDEAL TEMPERATURES -->
-    <div class="lit-section">
-        <div class="lit-header green">Ideal Temperatures</div>
-        <div class="lit-body">
-            <table class="ref-table">
-                <tr>
-                    <th>Sensor</th>
-                    <th>Range</th>
-                    <th>Notes</th>
-                </tr>
-                <tr>
-                    <td><strong>DT</strong> – Discharge</td>
-                    <td>Less than 160°F</td>
-                    <td>Should increase 10–15°F between tests</td>
-                </tr>
-                <tr>
-                    <td><strong>ET</strong> – Evaporator</td>
-                    <td>Less than 70°F</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td><strong>ST</strong> – Suction</td>
-                    <td>38°F – 90°F</td>
-                    <td></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <!-- NEXT STEPS -->
-    <div class="lit-section">
-        <div class="lit-header orange">Next Steps</div>
-        <div class="lit-body">
-            <ul>
-                <li>If <strong>one</strong> temperature reading is excessively high while others fluctuate normally — recheck the affected Thermistor, no further testing required.</li>
-                <li>If <strong>all</strong> temperatures remain close to AT with no fluctuation — proceed to test the Expansion and Compressor.</li>
-                <li>If <strong>DT and ET</strong> remain close and decrease in temperature — inspect installation and venting.</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- CAPACITOR TESTING -->
-    <div class="lit-section">
-        <div class="lit-header purple">How to Test the Capacitor</div>
-        <div class="lit-body">
-            <ol>
-                <li>Remove Controller, locate Capacitor (left corner)</li>
-                <li>Verify Capacitor has <strong>1 Purple wire</strong> and <strong>2 Red wires</strong></li>
-                <li>Hold <strong>MODE</strong> and <strong>NEXT</strong> — you should get <strong>TST</strong></li>
-                <li>Press <strong>DOWN</strong> arrow until <strong>CP</strong> is displayed, wait for <strong>CP ON</strong></li>
-                <li>Test across the terminals of the Capacitor for VAC while Compressor is running (highest voltage range)</li>
-            </ol>
-        </div>
-    </div>
-
-    <!-- CAPACITOR RESULTS -->
-    <div class="lit-section">
-        <div class="lit-header purple">Capacitor Results</div>
-        <div class="lit-body">
-            <ul>
-                <li>If wiring is <strong>not correct</strong> — update it and rerun the heat pump reading test.</li>
-                <li>If voltage is <strong>above incoming power</strong> (208/240 VAC) but <strong>below 310 VAC</strong> — replace the capacitor.</li>
-                <li>If voltage is <strong>below incoming power</strong> (208/240 VAC) — call back for next steps.</li>
-                <li>If voltage is <strong>above 310 VAC</strong> — this is considered normal. Continue to test the EXV and Compressor.</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- COMPRESSOR RESISTANCE -->
-    <div class="lit-section">
-        <div class="lit-header red">Compressor Resistance Testing</div>
-        <div class="lit-body">
-            <p>Test resistance between the following points and enter readings:</p>
-            <table class="ref-table">
-                <tr><th>Test</th><th>Points</th></tr>
-                <tr><td>A</td><td>Yellow wire → Red wire</td></tr>
-                <tr><td>B</td><td>Yellow wire → Purple wire</td></tr>
-                <tr><td>C</td><td>Red wire → Purple wire</td></tr>
-            </table>
-        </div>
-    </div>
-
-    <!-- EXV TESTING -->
-    <div class="lit-section">
-        <div class="lit-header teal">How to Test the EXV — Keep Power OFF</div>
-        <div class="lit-body">
-            <p>Locate the 5-pin EXV wiring harness and pull the clip out. On the back of the wire harness plugged into the control board, there are silver contacts that can be used as test points.</p>
-            <p>Test resistance (ohms) on the following combinations:</p>
-            <table class="ref-table">
-                <tr><th>Combination</th><th>Reference Ohms</th></tr>
-                <tr><td>Orange → Yellow</td><td>87.6 Ω</td></tr>
-                <tr><td>Red → Black</td><td>88.2 Ω</td></tr>
-                <tr><td>Grey → Black</td><td>44.7 Ω</td></tr>
-                <tr><td>Grey → Yellow</td><td>87.6 Ω</td></tr>
-                <tr><td>Grey → Red</td><td>43.9 Ω</td></tr>
-                <tr><td>Grey → Orange</td><td>44.3 Ω</td></tr>
-            </table>
-        </div>
-    </div>
-
-    <div class="lit-nav">
-        <button class="nav-btn-outline" onclick="goToPage('pageCover')">Back</button>
-        <button class="nav-btn" onclick="goToPage('pageTool')">Start Diagnostic</button>
-    </div>
-
-</div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════ -->
-<!-- PAGE 3: DIAGNOSTIC TOOL                    -->
-<!-- ═══════════════════════════════════════════ -->
-<div class="page" id="pageTool">
-<div style="padding: 20px;">
-<div class="tool-container">
-
-    <div class="logo-container">
-        <img src="DG-LOGO.png" class="dg-logo" alt="DG Logo">
-    </div>
-    <div class="subtitle">Technician Edition</div>
-    <div class="divider"></div>
-
-    <button id="resetBtn" onclick="resetTool()">Reset</button>
-
-    <!-- SECTION 1: TEMPS -->
-    <div class="section" id="section1">
-        <div class="section-header" onclick="toggleSection('section1', true)">Temps</div>
-        <div class="section-content single-col active" id="section1-content">
-            <label>Room Temp</label>
-            <input type="number" id="roomTemp">
-            <label>Water Temp</label>
-            <input type="number" id="waterTemp" onkeydown="handleTempsEnter(event)">
-        </div>
-    </div>
-
-    <!-- SECTION 2: THERMISTORS -->
-    <div class="section" id="section2">
-        <div class="section-header" onclick="toggleSection('section2')">Thermistors</div>
-        <div class="section-content" id="section2-content">
-            <div class="column">
-                <label>DT - Blue</label>
-                <input type="number" id="dt" oninput="validateThermistor('dt',1,160,0)">
-                <label>ST - Yellow</label>
-                <input type="number" id="st" oninput="validateThermistor('st',38,90,0)">
-                <label>ET - Grey</label>
-                <input type="number" id="et" oninput="validateThermistor('et',5,70,0)">
-                <label>AT - White</label>
-                <input type="number" id="at" oninput="validateAT('at')">
-                <label>Current</label>
-                <input type="number" id="amps" oninput="validateThermistor('amps',1,1.7,0)">
-            </div>
-            <div class="column">
-                <label>DT - Blue</label>
-                <input type="number" id="dt_b" oninput="validateThermistor('dt_b',1,160,0)">
-                <label>ST - Yellow</label>
-                <input type="number" id="st_b" oninput="validateThermistor('st_b',38,90,0)">
-                <label>ET - Grey</label>
-                <input type="number" id="et_b" oninput="validateThermistor('et_b',5,70,0)">
-                <label>AT - White</label>
-                <input type="number" id="at_b" oninput="validateAT('at_b')">
-                <label>Current</label>
-                <input type="number" id="amps_b"
-                       oninput="validateThermistor('amps_b',1,1.7,0)"
-                       onkeydown="handleThermLastEnter(event)">
-            </div>
-        </div>
-    </div>
-
-    <!-- SECTION 3: HEATING ELEMENTS -->
-    <div class="section" id="section3">
-        <div class="section-header" onclick="toggleSection('section3', true)">Heating Elements</div>
-        <div class="section-content single-col" id="section3-content">
-            <label>UT - Upper Temp</label>
-            <input type="number" id="utTemp" oninput="validateUTLT('utTemp')">
-            <label>Upper Element Current</label>
-            <input type="number" id="upperElement" oninput="validateElementCurrent('upperElement')">
-            <label>LT - Lower Temp</label>
-            <input type="number" id="ltTemp" oninput="validateUTLT('ltTemp')">
-            <label>Lower Element Current</label>
-            <input type="number" id="lowerElement"
-                   oninput="validateElementCurrent('lowerElement')"
-                   onkeydown="handleHeatLastEnter(event)">
-        </div>
-    </div>
-
-    <!-- SECTION 4: CAPACITOR -->
-    <div class="section" id="section4">
-        <div class="section-header" onclick="toggleSection('section4', true)">Capacitor</div>
-        <div class="section-content single-col" id="section4-content">
-            <label>Volts Coming In</label>
-            <input type="number" id="capIn">
-            <label>Capacitor Volts</label>
-            <input type="number" id="capVolts" oninput="validateCapacitor()">
-        </div>
-    </div>
-
-    <!-- SECTION 5: COMPRESSOR -->
-    <div class="section" id="section5">
-        <div class="section-header" onclick="toggleSection('section5', true)">Compressor</div>
-        <div class="section-content single-col" id="section5-content">
-            <label>Yellow → Red</label>
-            <input type="number" id="compYR" oninput="validateCompressor()">
-            <label>Yellow → Purple</label>
-            <input type="number" id="compYP" oninput="validateCompressor()">
-            <label>Red → Purple</label>
-            <input type="number" id="compRP" oninput="validateCompressor()">
-        </div>
-    </div>
-
-    <!-- SECTION 6: COMPRESSOR TO GROUND -->
-    <div class="section" id="section6">
-        <div class="section-header" onclick="toggleSection('section6', true)">Compressor To Ground</div>
-        <div class="section-content single-col" id="section6-content">
-            <label>Red → Ground</label>
-            <input type="text" id="compRedG" oninput="validateCompGround('compRedG')">
-            <label>Yellow → Ground</label>
-            <input type="text" id="compYelG" oninput="validateCompGround('compYelG')">
-            <label>Purple → Ground</label>
-            <input type="text" id="compPurG" oninput="validateCompGround('compPurG')">
-        </div>
-    </div>
-
-    <!-- SECTION 7: EXV -->
-    <div class="section" id="section7">
-        <div class="section-header" onclick="toggleSection('section7', true)">EXV</div>
-        <div class="section-content single-col" id="section7-content">
-            <label>Orange → Yellow</label>
-            <input type="number" id="exvOY" oninput="validateEXV('exvOY',81.90,99.00)">
-            <label>Red → Black</label>
-            <input type="number" id="exvRB" oninput="validateEXV('exvRB',83.70,97.20)">
-            <label>Grey → Black</label>
-            <input type="number" id="exvGB" oninput="validateEXV('exvGB',42.80,48.50)">
-            <label>Grey → Yellow</label>
-            <input type="number" id="exvGY" oninput="validateEXV('exvGY',46.60,47.50)">
-            <label>Grey → Red</label>
-            <input type="number" id="exvGR" oninput="validateEXV('exvGR',41.60,48.50)">
-            <label>Grey → Orange</label>
-            <input type="number" id="exvGO" oninput="validateEXV('exvGO',41.90,49.10)">
-        </div>
-    </div>
-
-    <!-- Feedback Strip -->
-    <div class="feedback-card" id="feedbackStrip" style="display:none;">
-        <h2>How did this diagnostic go?</h2>
-        <p class="fb-sub">Your feedback helps improve the tool.</p>
-        <div class="fb-stars" id="fbStars">
-            <span data-v="1">★</span><span data-v="2">★</span>
-            <span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
-        </div>
-        <textarea id="fbComment" rows="3" placeholder="Optional comment…"></textarea>
-        <div class="fb-btn-row">
-            <button id="fbSend" disabled>Send Feedback</button>
-            <span class="fb-status" id="fbStatus"></span>
-        </div>
-        <div class="fb-device" id="fbDevice"></div>
-    </div>
-
-</div>
-</div>
-</div>
-
-<script>
-// ═══════════════════════════════════════════
-// PAGE NAVIGATION
-// ═══════════════════════════════════════════
-function goToPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    if (pageId === 'pageTool') {
-        setTimeout(function() { document.getElementById('roomTemp').focus(); }, 100);
-    }
-}
-
-// ═══════════════════════════════════════════
-// DIAGNOSTIC TOOL LOGIC
-// ═══════════════════════════════════════════
-function toggleSection(sectionId) {
-    const content = document.getElementById(sectionId + '-content');
-    content.classList.toggle('active');
-}
-
-function openSection(sectionId) {
-    const content = document.getElementById(sectionId + '-content');
-    content.classList.add('active');
-}
-
-function resetTool() {
-    const inputs = document.querySelectorAll("input");
-    inputs.forEach(i => { i.value = ""; i.style.background = ""; });
-    const sections = document.querySelectorAll(".section-content");
-    sections.forEach(sec => sec.classList.remove("active"));
-    document.getElementById("section1-content").classList.add("active");
-    document.getElementById("feedbackStrip").style.display = "none";
-    document.getElementById("fbStatus").textContent = "";
-    document.getElementById("fbStatus").className = "fb-status";
-    document.getElementById("fbComment").value = "";
-    document.getElementById("fbSend").disabled = true;
-    document.querySelectorAll("#fbStars span").forEach(function(s) {
-        s.classList.remove("active");
-    });
-    selectedRating = 0;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.getElementById("roomTemp").focus();
-}
-
-function handleTempsEnter(e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        openSection('section2');
-        document.getElementById('dt').focus();
-    }
-}
-
-function handleThermLastEnter(e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        openSection('section3');
-        document.getElementById('utTemp').focus();
-    }
-}
-
-function handleHeatLastEnter(e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        openSection('section4');
-        document.getElementById('capIn').focus();
-    }
-}
+  <!-- ---------------- SCRIPT ---------------- -->
+  <script>
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("capVolts").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            openSection('section5');
-            document.getElementById('compYR').focus();
-        }
-    });
-    document.getElementById("compRP").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            openSection('section6');
-            document.getElementById('compRedG').focus();
-        }
-    });
-    document.getElementById("compPurG").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            openSection('section7');
-            document.getElementById('exvOY').focus();
-        }
-    });
-    document.getElementById("exvGO").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            document.getElementById("feedbackStrip").style.display = "block";
-            document.getElementById("feedbackStrip").scrollIntoView({ behavior: "smooth" });
-        }
-    });
-    let allInputs = Array.from(document.querySelectorAll("input"));
-    allInputs.forEach((input, i) => {
-        input.addEventListener("keydown", function(e) {
-            if (e.defaultPrevented) return;
-            if (e.key === "Enter" || e.key === "ArrowDown") {
-                e.preventDefault();
-                const next = allInputs[i + 1];
-                if (next) { next.focus(); next.select(); }
-            }
-            if (e.key === "ArrowUp") {
-                e.preventDefault();
-                const prev = allInputs[i - 1];
-                if (prev) { prev.focus(); prev.select(); }
-            }
-        });
-    });
-});
 
-// ═══════════════════════════════════════════
-// VALIDATION FUNCTIONS
-// ═══════════════════════════════════════════
-function validateThermistor(id,min,max,low) {
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(v) || v < low) { el.style.background = ""; return; }
-    el.style.background = (v >= min && v <= max) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateAT(id){
-    const room = parseFloat(document.getElementById("roomTemp").value);
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(room) || isNaN(v)) { el.style.background = ""; return; }
-    const min = room * 0.92, max = room * 1.08;
-    el.style.background = (v >= min && v <= max) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateElementCurrent(id){
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(v)) { el.style.background = ""; return; }
-    el.style.background = (v >= 16 && v <= 24) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateUTLT(id){
-    const water = parseFloat(document.getElementById("waterTemp").value);
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(water) || isNaN(v)) { el.style.background = ""; return; }
-    const min = water * 0.95, max = water * 1.05;
-    el.style.background = (v >= min && v <= max) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateCapacitor(){
-    const el = document.getElementById("capVolts");
-    const v = parseFloat(el.value);
-    if (isNaN(v)) { el.style.background = ""; return; }
-    if (v >= 310 && v <= 400) el.style.background = "#c8f7c5";
-    else if (v >= 288 && v <= 309) el.style.background = "#fff7a8";
-    else if (v >= 10 && v <= 287) el.style.background = "#f7c5c5";
-    else el.style.background = "";
-}
-function validateCompressor(){
-    const yr = parseFloat(document.getElementById("compYR").value);
-    const yp = parseFloat(document.getElementById("compYP").value);
-    const rpEl = document.getElementById("compRP");
-    const rp = parseFloat(rpEl.value);
-    if (isNaN(rp) || isNaN(yr) || isNaN(yp)) { rpEl.style.background = ""; return; }
-    const sum = yr + yp, min = rp * 0.95, max = rp * 1.05;
-    rpEl.style.background = (sum >= min && sum <= max) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateCompGround(id){
-    const el = document.getElementById(id);
-    const v = el.value.trim().toUpperCase();
-    if (v === "") { el.style.background = ""; return; }
-    el.style.background = (v === "OL") ? "#c8f7c5" : "#f7c5c5";
-}
-function validateEXV(id,min,max){
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(v)) { el.style.background = ""; return; }
-    el.style.background = (v >= min && v <= max) ? "#c8f7c5" : "#f7c5c5";
-}
+  /* Fade-out cover sheet */
+  document.getElementById("enterBtn").addEventListener("click", () => {
+  /* Recalculate totals */
+  function recalc() {
+    const rows = [...document.querySelectorAll("#inventoryBody tr")];
 
-// ═══════════════════════════════════════════
-// FEEDBACK — Google Sheets auto-collection
-// ═══════════════════════════════════════════
-var selectedRating = 0;
-(function () {
-    var FEEDBACK_URL =
-        'https://script.google.com/macros/s/AKfycbyHb-rUHlHOI29xAWJSIa5VBoEK-aEy8mzzWQJXg7F9w1jlmKVN5udxAXPEsoTmnEIR/exec';
-    function getDeviceInfo() {
-        var ua = navigator.userAgent;
-        var platform = /iPad/.test(ua) ? 'iPad'
-            : /iPhone/.test(ua) ? 'iPhone'
-            : /Android/.test(ua) ? 'Android'
-            : 'Desktop';
-        var browser = /Chrome\/(\d+)/.test(ua) ? 'Chrome ' + RegExp.$1
-            : /Safari\//.test(ua) ? 'Safari'
-            : /Firefox\/(\d+)/.test(ua) ? 'Firefox ' + RegExp.$1
-            : 'Other';
-        return platform + ' / ' + browser + ' / ' + navigator.platform;
-    }
-    async function submitFeedback(rating, comment) {
-        var payload = {
-            rating: rating, comment: comment,
-            timestamp: new Date().toISOString(), deviceInfo: getDeviceInfo()
-        };
-        try {
-            var res = await fetch(FEEDBACK_URL, {
-                method: 'POST', headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify(payload)
-            });
-            return res.ok || res.type === 'opaque';
-        } catch (err) { console.error('Feedback error:', err); return false; }
-    }
-    var stars   = document.querySelectorAll('#fbStars span');
-    var sendBtn = document.getElementById('fbSend');
-    var status  = document.getElementById('fbStatus');
-    stars.forEach(function (s) {
-        s.addEventListener('click', function () {
-            selectedRating = +s.dataset.v;
-            stars.forEach(function (st) {
-                st.classList.toggle('active', +st.dataset.v <= selectedRating);
-            });
-            sendBtn.disabled = false;
-        });
+    let inventory = 0, profit = 0, cash = 0, app = 0, appTaxTotal = 0, gaby = 0, ginger = 0;
+
+    rows.forEach(row => {
+      const name = row.querySelector(".name-select").value;
+      const qty = parseNumber(row.querySelector(".qty-input").value);
+      const price = parseNumber(row.querySelector(".price-input").value);
+      const sold = row.querySelector(".sold-checkbox").checked;
+      const cashapp = row.querySelector(".cashapp-select").value;
+
+      const line = price * qty;
+
+      inventory += price;
+
+      if (sold) profit += line;
+      if (sold && cashapp === "Cash") cash += line;
+      if (sold && cashapp === "App") app += line;
+
+      let appTax = 0;
+      if (sold && cashapp === "App") {
+        appTax = (price * 0.025) + 0.15;
+        appTaxTotal += appTax;
+      }
+      row.querySelector(".app-tax-cell").textContent = formatMoney(appTax);
+
+      if (name === "Gaby") gaby += line;
+      if (name === "Ginger") ginger += line;
     });
-    sendBtn.addEventListener('click', async function () {
-        sendBtn.disabled = true;
-        status.textContent = 'Sending…';
-        status.className = 'fb-status';
-        var ok = await submitFeedback(
-            selectedRating,
-            document.getElementById('fbComment').value.trim() || '(no comment)'
-        );
-        status.textContent = ok ? '✓ Thanks!' : '✗ Failed — try again';
-        status.className = 'fb-status ' + (ok ? 'success' : 'error');
-        if (!ok) sendBtn.disabled = false;
+
+    document.getElementById("inventoryTotal").textContent = formatMoney(inventory);
+    document.getElementById("profitTotal").textContent = formatMoney(profit);
+    document.getElementById("cashTotal").textContent = formatMoney(cash);
+    document.getElementById("appTotal").textContent = formatMoney(app);
+    document.getElementById("appTaxTotal").textContent = formatMoney(appTaxTotal);
+    document.getElementById("gabyTotal").textContent = formatMoney(gaby);
+    document.getElementById("gingerTotal").textContent = formatMoney(ginger);
+  }
+
+  /* Add row */
+  function addRow() {
+    const tbody = document.getElementById("inventoryBody");
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>
+        <select class="name-select">
+          <option value="">_</option>
+          <option value="Gaby">Gaby</option>
+          <option value="Ginger">Ginger</option>
+        </select>
+      </td>
+      <td><input type="text" class="desc-input"></td>
+      <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
+      <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
+      <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
+      <td>
+        <select class="cashapp-select small-input">
+          <option value="">_</option>
+          <option value="Cash">Cash</option>
+          <option value="App">App</option>
+        </select>
+      </td>
+      <td>
+        <select class="initials-select small-input">
+          <option value="">_</option>
+          <option value="GMG">GMG</option>
+          <option value="GC">GC</option>
+        </select>
+      </td>
+      <td class="app-tax-cell">$0.00</td>
+    `;
+
+    tbody.appendChild(tr);
+    wireRow(tr);
+    recalc();
+    return tr;
+  }
+
+  /* Navigation + auto-add-row logic */
+  function wireRow(row) {
+    row.querySelectorAll("input, select").forEach(el => {
+      el.addEventListener("input", recalc);
+      el.addEventListener("change", recalc);
+
+      el.addEventListener("keydown", e => {
+        const cell = el.closest("td");
+        const rowEl = el.closest("tr");
+        const cells = [...rowEl.children];
+        const index = cells.indexOf(cell);
+
+        if (e.key === "ArrowLeft" && index > 0) {
+          e.preventDefault();
+          cells[index - 1].querySelector("input, select").focus();
+        }
+
+        if (e.key === "ArrowRight" && index < cells.length - 1) {
+          e.preventDefault();
+          cells[index + 1].querySelector("input, select").focus();
+        }
+
+        if (e.key === "ArrowUp") {
+          const prev = rowEl.previousElementSibling;
+          if (prev) {
+            e.preventDefault();
+            prev.children[index].querySelector("input, select").focus();
+          }
+        }
+
+        if (e.key === "ArrowDown") {
+          const next = rowEl.nextElementSibling;
+          if (next) {
+            e.preventDefault();
+            next.children[index].querySelector("input, select").focus();
+          }
+        }
+      });
     });
-    document.getElementById('fbDevice').textContent = getDeviceInfo();
-})();
-</script>
+
+    const priceInput = row.querySelector(".price-input");
+
+    priceInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const newRow = addRow();
+        newRow.querySelector(".name-select").focus();
+      }
+
+      if (e.key === "Tab" && !e.shiftKey) {
+        const newRow = addRow();
+        newRow.querySelector(".name-select").focus();
+      }
+    });
+  }
+    });
+  }
+
+  /* Wire the very first row on page load */
+  wireRow(document.querySelector("#inventoryBody tr"));
+
+  /* Initial calculation */
+  recalc();
+
+}); // END DOMContentLoaded
+
+  </script>
 
 </body>
 </html>
