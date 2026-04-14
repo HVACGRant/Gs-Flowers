@@ -1,52 +1,407 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>G's Flowers Inventory</title> <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet"> <style> body { margin: 0; font-family: "Playfair Display", serif; background: #f9e3ea; color: #000; overflow-x: hidden; } /* ---------------- COVER SHEET ---------------- */ #coverSheet { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #f9e3ea url('https://cdn.pixabay.com/photo/2016/11/29/03/53/paper-1868104_1280.jpg'); background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; opacity: 1; transition: opacity 1.2s ease; } .cover-wrapper { position: relative; text-align: center; width: 100%; height: 320px; animation: fadeIn 2s ease forwards; } .cover-wrapper::before { content: ""; position: absolute; top: 50%; left: 50%; width: 420px; height: 420px; transform: translate(-50%, -50%); background-image: url('https://cdn.pixabay.com/photo/2017/08/30/07/52/flower-2695079_1280.png'); background-size: contain; background-repeat: no-repeat; opacity: 0.25; z-index: 1; animation: fadeIn 2.5s ease forwards; } @keyframes fadeIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } } .cover-gsflowers { font-family: "Great Vibes", cursive; font-size: 140px; position: relative; z-index: 3; line-height: 0.9; color: #000; text-shadow: 0 0 12px rgba(255, 255, 255, 0.7); transition: color 0.6s ease, text-shadow 0.6s ease; } .cover-gsflowers:hover { color: #d4a857; text-shadow: 0 0 18px rgba(212, 168, 87, 0.8); } .cover-gsflowers::after { content: ""; position: absolute; left: 50%; bottom: -20px; transform: translateX(-50%); width: 260px; height: 60px; background-image: url('https://cdn.pixabay.com/photo/2016/12/23/14/44/divider-1921600_1280.png'); background-size: contain; background-repeat: no-repeat; opacity: 0.8; animation: fadeIn 3s ease forwards; } #enterBtn { margin-top: 40px; padding: 10px 24px; background: #000; color: #fff; border: none; font-size: 18px; cursor: pointer; font-family: "Playfair Display", serif; z-index: 5; animation: fadeIn 3.5s ease forwards; } #enterBtn:hover { background: #333; transform: scale(1.05); transition: 0.3s ease; } /* ---------------- RESET BUTTON ---------------- */ #resetPageBtn { margin-bottom: 12px; padding: 6px 14px; background: #ff4d4d; color: #fff; border: none; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 4px; } #resetPageBtn:hover { background: #d93636; } /* ---------------- FADE GROUP (Gaby + Ginger) ---------------- */ .fadeGroup { transition: opacity 0.4s ease; } .fadeGroup.hidden { opacity: 0; } /* ---------------- TOTALS BAR ---------------- */ .totals-bar { position: fixed; top: 0; left: 0; right: 0; height: 80px; background: #000; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-sizing: border-box; z-index: 1000; opacity: 0; transition: opacity 1.2s ease; } .total-item { flex: 1; text-align: center; padding: 4px 8px; } .total-label { font-family: "Great Vibes", cursive; font-size: 18px; display: block; cursor: pointer; } .total-value { font-size: 16px; font-weight: 600; } /* ---------------- CONTENT ---------------- */ .content { padding: 100px 16px 24px; opacity: 0; transition: opacity 1.2s ease; } table { width: 100%; border-collapse: collapse; background: #fff; } th, td { border: 1px solid #ddd; padding: 6px; font-size: 13px; text-align: center; } th { background: #f5c9d6; position: sticky; top: 80px; z-index: 500; }
-input[type="text"], input[type="number"], select { width: 100%; box-sizing: border-box; padding: 2px 4px; font-size: 12px; }
-.small-input { max-width: 80px; }
-.checkbox-cell input { transform: scale(1.1); }
-</style> </head>
-<body>
-<!-- ---------------- COVER SHEET ---------------- --> <div id="coverSheet"> <div class="cover-wrapper"> <div class="cover-text cover-gsflowers">G’s Flowers</div> </div> <button id="enterBtn">Enter</button> </div>
-<!-- ---------------- TOTALS BAR ---------------- --> <div class="totals-bar" id="totalsBar">
-<div class="total-item"><span class="total-label">Inventory</span><span class="total-value" id="inventoryTotal">$0.00</span></div>
-<div class="total-item"><span class="total-label">Profit</span><span class="total-value" id="profitTotal">$0.00</span></div>
-<div class="total-item"><span class="total-label">Cash</span><span class="total-value" id="cashTotal">$0.00</span></div>
-<div class="total-item"><span class="total-label">App</span><span class="total-value" id="appTotal">$0.00</span></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- CLICKABLE APP TAXES -->
-<div class="total-item">
-  <span class="total-label" id="toggleFade">App Taxes</span>
-  <span class="total-value" id="appTaxTotal">$0.00</span>
-</div>
+  <title>G's Flowers Inventory</title>
 
-<!-- FADE TARGETS -->
-<div class="total-item fadeGroup">
-  <span class="total-label">Gaby</span>
-  <span class="total-value" id="gabyTotal">$0.00</span>
-</div>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
-<div class="total-item fadeGroup">
-  <span class="total-label">Ginger</span>
-  <span class="total-value" id="gingerTotal">$0.00</span>
-</div>
-</div>
-<!-- ---------------- MAIN CONTENT ---------------- --> <div class="content" id="contentArea">
-<button id="resetPageBtn">Reset Page</button>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      background: #f9e3ea;
+      color: #000;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
 
-<table id="inventoryTable">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Qty</th>
-      <th>Price</th>
-      <th>Sold</th>
-      <th>Cash/App</th>
-      <th>Initials</th>
-      <th>App Tax</th>
-    </tr>
-  </thead>
+    /* ---------------- COVER SHEET ---------------- */
+    #coverSheet {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #f9e3ea url('https://cdn.pixabay.com/photo/2016/11/29/03/53/paper-1868104_1280.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 1;
+      transition: opacity 1.2s ease;
+    }
 
-  <tbody id="inventoryBody">
-    <tr>
+    .cover-wrapper {
+      position: relative;
+      text-align: center;
+      width: 100%;
+      height: 320px;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    .cover-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 420px;
+      height: 420px;
+      transform: translate(-50%, -50%);
+      background-image: url('https://cdn.pixabay.com/photo/2017/08/30/07/52/flower-2695079_1280.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.25;
+      z-index: 1;
+      animation: fadeIn 2.5s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .cover-gsflowers {
+      font-family: "Great Vibes", cursive;
+      font-size: 140px;
+      position: relative;
+      z-index: 3;
+      line-height: 0.9;
+      color: #000;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+      transition: color 0.6s ease, text-shadow 0.6s ease;
+    }
+
+    .cover-gsflowers:hover {
+      color: #d4a857;
+      text-shadow: 0 0 18px rgba(212, 168, 87, 0.8);
+    }
+
+    .cover-gsflowers::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -20px;
+      transform: translateX(-50%);
+      width: 260px;
+      height: 60px;
+      background-image: url('https://cdn.pixabay.com/photo/2016/12/23/14/44/divider-1921600_1280.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 0.8;
+      animation: fadeIn 3s ease forwards;
+    }
+
+    #enterBtn {
+      margin-top: 40px;
+      padding: 10px 24px;
+      background: #000;
+      color: #fff;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      font-family: "Playfair Display", serif;
+      z-index: 5;
+      animation: fadeIn 3.5s ease forwards;
+    }
+
+    #enterBtn:hover {
+      background: #333;
+      transform: scale(1.05);
+      transition: 0.3s ease;
+    }
+    /* ---------------- RESET BUTTON ---------------- */
+    #resetPageBtn {
+      margin-bottom: 12px;
+      padding: 8px 16px;
+      background: #ff4d4d;
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    #resetPageBtn:hover {
+      background: #d93636;
+    }
+
+    /* ---------------- FADE GROUP ---------------- */
+    .fadeGroup {
+      transition: opacity 0.4s ease;
+    }
+
+    .fadeGroup.hidden {
+      opacity: 0;
+    }
+
+    /* ---------------- TOTALS BAR ---------------- */
+    .totals-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-sizing: border-box;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .total-item {
+      flex: 1;
+      text-align: center;
+      padding: 4px 8px;
+    }
+
+    .total-label {
+      font-family: "Great Vibes", cursive;
+      font-size: 18px;
+      display: block;
+      cursor: pointer;
+    }
+
+    .total-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* ---------------- MOBILE TOTALS ---------------- */
+    @media (max-width: 600px) {
+      .totals-bar {
+        height: auto;
+        flex-wrap: wrap;
+        padding: 8px;
+      }
+      .total-item {
+        flex: 1 1 50%;
+        padding: 6px 0;
+      }
+      .total-label { font-size: 16px; }
+      .total-value { font-size: 14px; }
+    }
+
+    /* ---------------- CONTENT ---------------- */
+    .content {
+      padding: 100px 16px 24px;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px 4px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    th {
+      background: #f5c9d6;
+      position: sticky;
+      top: 80px;
+      z-index: 500;
+    }
+
+    /* ---------------- INPUTS ---------------- */
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 4px 6px;
+      font-size: 16px;
+      min-height: 36px;
+    }
+
+    .small-input { max-width: 80px; }
+
+    .checkbox-cell input {
+      transform: scale(1.4);
+    }
+
+    @media (max-width: 600px) {
+      .cover-gsflowers { font-size: 80px; }
+      .cover-wrapper::before { width: 260px; height: 260px; }
+      #enterBtn { font-size: 16px; padding: 8px 20px; }
+    }
+  </style>
+</head>
+  <!-- ---------------- MAIN CONTENT ---------------- -->
+  <div class="content" id="contentArea">
+
+    <button id="resetPageBtn">Reset Page</button>
+
+    <table id="inventoryTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Sold</th>
+          <th>Cash/App</th>
+          <th>Initials</th>
+          <th>App Tax</th>
+        </tr>
+      </thead>
+
+      <tbody id="inventoryBody">
+        <tr>
+          <td>
+            <select class="name-select">
+              <option value="">_</option>
+              <option value="Gaby">Gaby</option>
+              <option value="Ginger">Ginger</option>
+            </select>
+          </td>
+
+          <td><input type="text" class="desc-input"></td>
+          <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
+          <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
+
+          <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
+
+          <td>
+            <select class="cashapp-select small-input">
+              <option value="">_</option>
+              <option value="Cash">Cash</option>
+              <option value="App">App</option>
+            </select>
+          </td>
+
+          <td>
+            <select class="initials-select small-input">
+              <option value="">_</option>
+              <option value="GMG">GMG</option>
+              <option value="GC">GC</option>
+            </select>
+          </td>
+
+          <td class="app-tax-cell">$0.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ---------------- SCRIPT ---------------- -->
+  <script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* Fade-out cover sheet */
+  document.getElementById("enterBtn").addEventListener("click", () => {
+    const cover = document.getElementById("coverSheet");
+    const totals = document.getElementById("totalsBar");
+    const content = document.getElementById("contentArea");
+
+    cover.style.opacity = "0";
+
+    setTimeout(() => {
+      cover.style.display = "none";
+      totals.style.opacity = "1";
+      content.style.opacity = "1";
+    }, 1200);
+  });
+
+  /* Reset page but keep saved data */
+  document.getElementById("resetPageBtn").addEventListener("click", () => {
+    const inputs = document.querySelectorAll("input[type='text'], input[type='number']");
+    inputs.forEach(i => i.value = "");
+
+    const selects = document.querySelectorAll("select");
+    selects.forEach(s => s.value = "");
+
+    const checks = document.querySelectorAll("input[type='checkbox']");
+    checks.forEach(c => c.checked = false);
+
+    const taxCells = document.querySelectorAll(".app-tax-cell");
+    taxCells.forEach(c => c.textContent = "$0.00");
+
+    recalc();
+  });
+
+  /* Toggle fade for Gaby & Ginger totals only */
+  document.getElementById("toggleFade").addEventListener("click", () => {
+    document.querySelectorAll(".fadeGroup").forEach(el => {
+      el.classList.toggle("hidden");
+    });
+  });
+
+  function parseNumber(v) {
+    const n = parseFloat(v);
+    return isNaN(n) ? 0 : n;
+  }
+
+  function formatMoney(v) {
+    return "$" + v.toFixed(2);
+  }
+  /* Recalculate totals */
+  function recalc() {
+    const rows = [...document.querySelectorAll("#inventoryBody tr")];
+
+    let inventory = 0, profit = 0, cash = 0, app = 0, appTaxTotal = 0, gaby = 0, ginger = 0;
+
+    rows.forEach(row => {
+      const name = row.querySelector(".name-select").value;
+      const qty = parseNumber(row.querySelector(".qty-input").value);
+      const price = parseNumber(row.querySelector(".price-input").value);
+      const sold = row.querySelector(".sold-checkbox").checked;
+      const cashapp = row.querySelector(".cashapp-select").value;
+
+      const line = price * qty;
+
+      inventory += line;
+
+      if (sold) profit += line;
+      if (sold && cashapp === "Cash") cash += line;
+      if (sold && cashapp === "App") app += line;
+
+      let appTax = 0;
+      if (sold && cashapp === "App") {
+        appTax = (price * 0.025) + 0.15;
+        appTaxTotal += appTax;
+      }
+      row.querySelector(".app-tax-cell").textContent = formatMoney(appTax);
+
+      if (name === "Gaby") gaby += line;
+      if (name === "Ginger") ginger += line;
+    });
+
+    document.getElementById("inventoryTotal").textContent = formatMoney(inventory);
+    document.getElementById("profitTotal").textContent = formatMoney(profit);
+    document.getElementById("cashTotal").textContent = formatMoney(cash);
+    document.getElementById("appTotal").textContent = formatMoney(app);
+    document.getElementById("appTaxTotal").textContent = formatMoney(appTaxTotal);
+    document.getElementById("gabyTotal").textContent = formatMoney(gaby);
+    document.getElementById("gingerTotal").textContent = formatMoney(ginger);
+  }
+
+  /* Add row */
+  function addRow() {
+    const tbody = document.getElementById("inventoryBody");
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
       <td>
         <select class="name-select">
           <option value="">_</option>
@@ -54,13 +409,10 @@ input[type="text"], input[type="number"], select { width: 100%; box-sizing: bord
           <option value="Ginger">Ginger</option>
         </select>
       </td>
-
       <td><input type="text" class="desc-input"></td>
       <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
       <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
-
       <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
-
       <td>
         <select class="cashapp-select small-input">
           <option value="">_</option>
@@ -68,7 +420,6 @@ input[type="text"], input[type="number"], select { width: 100%; box-sizing: bord
           <option value="App">App</option>
         </select>
       </td>
-
       <td>
         <select class="initials-select small-input">
           <option value="">_</option>
@@ -76,197 +427,76 @@ input[type="text"], input[type="number"], select { width: 100%; box-sizing: bord
           <option value="GC">GC</option>
         </select>
       </td>
-
       <td class="app-tax-cell">$0.00</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-<!-- ---------------- SCRIPT ---------------- --> <script> /* Fade-out cover sheet */ document.getElementById("enterBtn").addEventListener("click", () => { const cover = document.getElementById("coverSheet"); const totals = document.getElementById("totalsBar"); const content = document.getElementById("contentArea");
-  cover.style.opacity = "0";
+    `;
 
-  setTimeout(() => {
-    cover.style.display = "none";
-    totals.style.opacity = "1";
-    content.style.opacity = "1";
-  }, 1200);
-});
+    tbody.appendChild(tr);
+    wireRow(tr);
+    recalc();
+    return tr;
+  }
 
-/* Reset page but keep saved data */
-document.getElementById("resetPageBtn").addEventListener("click", () => {
-  const inputs = document.querySelectorAll("input[type='text'], input[type='number']");
-  inputs.forEach(i => i.value = "");
+  /* Navigation + auto-add-row logic */
+  function wireRow(row) {
+    row.querySelectorAll("input, select").forEach(el => {
+      el.addEventListener("input", recalc);
+      el.addEventListener("change", recalc);
 
-  const selects = document.querySelectorAll("select");
-  selects.forEach(s => s.value = "");
+      el.addEventListener("keydown", e => {
+        const cell = el.closest("td");
+        const rowEl = el.closest("tr");
+        const cells = [...rowEl.children];
+        const index = cells.indexOf(cell);
 
-  const checks = document.querySelectorAll("input[type='checkbox']");
-  checks.forEach(c => c.checked = false);
-
-  const taxCells = document.querySelectorAll(".app-tax-cell");
-  taxCells.forEach(c => c.textContent = "$0.00");
-
-  recalc();
-});
-
-/* Toggle fade for Gaby & Ginger totals only */
-document.getElementById("toggleFade").addEventListener("click", () => {
-  document.querySelectorAll(".fadeGroup").forEach(el => {
-    el.classList.toggle("hidden");
-  });
-});
-
-function parseNumber(v) {
-  const n = parseFloat(v);
-  return isNaN(n) ? 0 : n;
-}
-
-function formatMoney(v) {
-  return "$" + v.toFixed(2);
-}
-
-/* Recalculate totals */
-function recalc() {
-  const rows = [...document.querySelectorAll("#inventoryBody tr")];
-
-  let inventory = 0, profit = 0, cash = 0, app = 0, appTaxTotal = 0, gaby = 0, ginger = 0;
-
-  rows.forEach(row => {
-    const name = row.querySelector(".name-select").value;
-    const qty = parseNumber(row.querySelector(".qty-input").value);
-    const price = parseNumber(row.querySelector(".price-input").value);
-    const sold = row.querySelector(".sold-checkbox").checked;
-    const cashapp = row.querySelector(".cashapp-select").value;
-
-    const line = price * qty;
-
-    inventory += price;
-
-    if (sold) profit += line;
-    if (sold && cashapp === "Cash") cash += line;
-    if (sold && cashapp === "App") app += line;
-
-    let appTax = 0;
-    if (sold && cashapp === "App") {
-      appTax = (price * 0.025) + 0.15;
-      appTaxTotal += appTax;
-    }
-    row.querySelector(".app-tax-cell").textContent = formatMoney(appTax);
-
-    if (name === "Gaby") gaby += line;
-    if (name === "Ginger") ginger += line;
-  });
-
-  document.getElementById("inventoryTotal").textContent = formatMoney(inventory);
-  document.getElementById("profitTotal").textContent = formatMoney(profit);
-  document.getElementById("cashTotal").textContent = formatMoney(cash);
-  document.getElementById("appTotal").textContent = formatMoney(app);
-  document.getElementById("appTaxTotal").textContent = formatMoney(appTaxTotal);
-  document.getElementById("gabyTotal").textContent = formatMoney(gaby);
-  document.getElementById("gingerTotal").textContent = formatMoney(ginger);
-}
-/* Add row */ function addRow() { const tbody = document.getElementById("inventoryBody"); const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td>
-      <select class="name-select">
-        <option value="">_</option>
-        <option value="Gaby">Gaby</option>
-        <option value="Ginger">Ginger</option>
-      </select>
-    </td>
-    <td><input type="text" class="desc-input"></td>
-    <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
-    <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
-    <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
-    <td>
-      <select class="cashapp-select small-input">
-        <option value="">_</option>
-        <option value="Cash">Cash</option>
-        <option value="App">App</option>
-      </select>
-    </td>
-    <td>
-      <select class="initials-select small-input">
-        <option value="">_</option>
-        <option value="GMG">GMG</option>
-        <option value="GC">GC</option>
-      </select>
-    </td>
-    <td class="app-tax-cell">$0.00</td>
-  `;
-
-  tbody.appendChild(tr);
-  wireRow(tr);
-  recalc();
-  return tr;
-}
-
-/* Navigation + auto-add-row logic */
-function wireRow(row) {
-  row.querySelectorAll("input, select").forEach(el => {
-    el.addEventListener("input", recalc);
-    el.addEventListener("change", recalc);
-
-    el.addEventListener("keydown", e => {
-      const cell = el.closest("td");
-      const rowEl = el.closest("tr");
-      const cells = [...rowEl.children];
-      const index = cells.indexOf(cell);
-
-      if (e.key === "ArrowLeft" && index > 0) {
-        e.preventDefault();
-        cells[index - 1].querySelector("input, select").focus();
-      }
-
-      if (e.key === "ArrowRight" && index < cells.length - 1) {
-        e.preventDefault();
-        cells[index + 1].querySelector("input, select").focus();
-      }
-
-      if (e.key === "ArrowUp") {
-        const prev = rowEl.previousElementSibling;
-        if (prev) {
+        if (e.key === "ArrowLeft" && index > 0) {
           e.preventDefault();
-          prev.children[index].querySelector("input, select").focus();
+          cells[index - 1].querySelector("input, select").focus();
         }
-      }
 
-      if (e.key === "ArrowDown") {
-        const next = rowEl.nextElementSibling;
-        if (next) {
+        if (e.key === "ArrowRight" && index < cells.length - 1) {
           e.preventDefault();
-          next.children[index].querySelector("input, select").focus();
+          cells[index + 1].querySelector("input, select").focus();
         }
-      }
+
+        if (e.key === "ArrowUp") {
+          const prev = rowEl.previousElementSibling;
+          if (prev) {
+            e.preventDefault();
+            prev.children[index].querySelector("input, select").focus();
+          }
+        }
+
+        if (e.key === "ArrowDown") {
+          const next = rowEl.nextElementSibling;
+          if (next) {
+            e.preventDefault();
+            next.children[index].querySelector("input, select").focus();
+          }
+        }
+      });
     });
-  });
 
-  const priceInput = row.querySelector(".price-input");
+    const priceInput = row.querySelector(".price-input");
 
-  priceInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const newRow = addRow();
-      newRow.querySelector(".name-select").focus();
-    }
-
-    if (e.key === "Tab" && !e.shiftKey) {
-      addRow();
-    }
-
-    if (e.key === "ArrowRight") {
-      const atEnd = priceInput.selectionStart === priceInput.value.length;
-      if (atEnd) {
+    priceInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
         const newRow = addRow();
         newRow.querySelector(".name-select").focus();
       }
-    }
-  });
-}
 
-document.addEventListener("DOMContentLoaded", () => {
-  wireRow(document.querySelector("#inventoryBody tr"));
-  recalc();
-});
-</script>
-</body> </html>
+      if (e.key ===
+    /* Wire the very first row on page load */
+    wireRow(document.querySelector("#inventoryBody tr"));
+
+    /* Initial calculation */
+    recalc();
+
+}); // END DOMContentLoaded
+
+  </script>
+
+</body>
+</html>
+
+
