@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>G's Flowers Inventory</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -12,6 +15,7 @@
       background: #f9e3ea;
       color: #000;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
     /* ---------------- COVER SHEET ---------------- */
@@ -115,11 +119,11 @@
     /* ---------------- RESET BUTTON ---------------- */
     #resetPageBtn {
       margin-bottom: 12px;
-      padding: 6px 14px;
+      padding: 8px 16px;
       background: #ff4d4d;
       color: #fff;
       border: none;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
       border-radius: 4px;
@@ -129,7 +133,7 @@
       background: #d93636;
     }
 
-    /* ---------------- FADE GROUP (Gaby + Ginger) ---------------- */
+    /* ---------------- FADE GROUP ---------------- */
     .fadeGroup {
       transition: opacity 0.4s ease;
     }
@@ -175,11 +179,28 @@
       font-weight: 600;
     }
 
+    /* ---------------- MOBILE TOTALS ---------------- */
+    @media (max-width: 600px) {
+      .totals-bar {
+        height: auto;
+        flex-wrap: wrap;
+        padding: 8px;
+      }
+      .total-item {
+        flex: 1 1 50%;
+        padding: 6px 0;
+      }
+      .total-label { font-size: 16px; }
+      .total-value { font-size: 14px; }
+    }
+
     /* ---------------- CONTENT ---------------- */
     .content {
       padding: 100px 16px 24px;
       opacity: 0;
       transition: opacity 1.2s ease;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     table {
@@ -190,8 +211,8 @@
 
     th, td {
       border: 1px solid #ddd;
-      padding: 6px;
-      font-size: 13px;
+      padding: 8px 4px;
+      font-size: 14px;
       text-align: center;
     }
 
@@ -202,17 +223,28 @@
       z-index: 500;
     }
 
+    /* ---------------- INPUTS ---------------- */
     input[type="text"],
     input[type="number"],
     select {
       width: 100%;
       box-sizing: border-box;
-      padding: 2px 4px;
-      font-size: 12px;
+      padding: 4px 6px;
+      font-size: 16px; /* prevents iPhone zoom */
+      min-height: 36px; /* finger-friendly */
     }
 
     .small-input { max-width: 80px; }
-    .checkbox-cell input { transform: scale(1.1); }
+
+    .checkbox-cell input {
+      transform: scale(1.4);
+    }
+
+    @media (max-width: 600px) {
+      .cover-gsflowers { font-size: 80px; }
+      .cover-wrapper::before { width: 260px; height: 260px; }
+      #enterBtn { font-size: 16px; padding: 8px 20px; }
+    }
   </style>
 </head>
 
@@ -234,13 +266,11 @@
     <div class="total-item"><span class="total-label">Cash</span><span class="total-value" id="cashTotal">$0.00</span></div>
     <div class="total-item"><span class="total-label">App</span><span class="total-value" id="appTotal">$0.00</span></div>
 
-    <!-- CLICKABLE APP TAXES -->
     <div class="total-item">
       <span class="total-label" id="toggleFade">App Taxes</span>
       <span class="total-value" id="appTaxTotal">$0.00</span>
     </div>
 
-    <!-- FADE TARGETS -->
     <div class="total-item fadeGroup">
       <span class="total-label">Gaby</span>
       <span class="total-value" id="gabyTotal">$0.00</span>
@@ -484,31 +514,8 @@
       const priceInput = row.querySelector(".price-input");
 
       priceInput.addEventListener("keydown", e => {
+        const atEnd = priceInput.selectionStart === priceInput.value.length;
+
         if (e.key === "Enter") {
           e.preventDefault();
-          const newRow = addRow();
-          newRow.querySelector(".name-select").focus();
-        }
-
-        if (e.key === "Tab" && !e.shiftKey) {
-          addRow();
-        }
-
-        if (e.key === "ArrowRight") {
-          const atEnd = priceInput.selectionStart === priceInput.value.length;
-          if (atEnd) {
-            const newRow = addRow();
-            newRow.querySelector(".name-select").focus();
-          }
-        }
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      wireRow(document.querySelector("#inventoryBody tr"));
-      recalc();
-    });
-  </script>
-
-</body>
-</html>
+          const newRow =
