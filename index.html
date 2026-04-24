@@ -179,72 +179,44 @@
       font-weight: 600;
     }
 
-    /* ---------------- MOBILE TOTALS ---------------- */
-    @media (max-width: 600px) {
-      .totals-bar {
-        height: auto;
-        flex-wrap: wrap;
-        padding: 8px;
-      }
-      .total-item {
-        flex: 1 1 50%;
-        padding: 6px 0;
-      }
-      .total-label { font-size: 16px; }
-      .total-value { font-size: 14px; }
-    }
-
     /* ---------------- CONTENT ---------------- */
     .content {
-      padding: 100px 16px 24px;
+      padding: 160px 16px 24px; /* moved down for visibility */
       opacity: 0;
       transition: opacity 1.2s ease;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
+    /* ---------------- TIGHTENED TABLE ---------------- */
+    #inventoryTable th,
+    #inventoryTable td {
+      padding: 2px;
+      height: 32px;
     }
 
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px 4px;
+    #inventoryTable input,
+    #inventoryTable select {
+      margin-top: -6px;
+      margin-bottom: -2px;
+      height: 28px;
       font-size: 14px;
-      text-align: center;
     }
 
-    th {
+    .checkbox-cell input {
+      transform: scale(1.2);
+      margin-top: -4px;
+    }
+
+    #inventoryTable th {
+      height: 34px;
+      font-size: 14px;
       background: #f5c9d6;
       position: sticky;
       top: 80px;
       z-index: 500;
     }
 
-    /* ---------------- INPUTS ---------------- */
-    input[type="text"],
-    input[type="number"],
-    select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 4px 6px;
-      font-size: 16px;
-      min-height: 36px;
-    }
-
-    .small-input { max-width: 80px; }
-
-    .checkbox-cell input {
-      transform: scale(1.4);
-    }
-
-    @media (max-width: 600px) {
-      .cover-gsflowers { font-size: 80px; }
-      .cover-wrapper::before { width: 260px; height: 260px; }
-      #enterBtn { font-size: 16px; padding: 8px 20px; }
-    }
   </style>
 </head>
 <body>
