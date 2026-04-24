@@ -197,30 +197,65 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* ---------------- TIGHTENED TABLE ---------------- */
+    /* ---------------- TIGHT & CLEAN TABLE ---------------- */
+    #inventoryTable {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
     #inventoryTable th,
     #inventoryTable td {
-      padding: 2px;
-      height: 32px;
+      padding: 4px 6px;
+      text-align: center;
+      vertical-align: middle;
+      height: 38px;
     }
 
+    /* Wider Description column */
+    #inventoryTable td:nth-child(2),
+    #inventoryTable th:nth-child(2) {
+      width: 28%;
+      text-align: left;
+    }
+
+    /* Inputs uniform */
     #inventoryTable input,
     #inventoryTable select {
-      margin-top: -6px;
-      margin-bottom: -2px;
-      height: 28px;
-      font-size: 14px;
+      width: 100%;
+      height: 32px;
+      font-size: 15px;
+      padding: 4px 6px;
+      margin: 0;
+      box-sizing: border-box;
+      border: 1px solid #aaa;
+      border-radius: 4px;
     }
 
+    /* Left-align Description input */
+    .desc-input {
+      text-align: left;
+    }
+
+    /* Checkbox centered */
     .checkbox-cell input {
       transform: scale(1.2);
-      margin-top: -4px;
+      margin: 0;
     }
 
+    /* App Tax cell */
+    .app-tax-cell {
+      font-weight: 600;
+      font-size: 15px;
+      text-align: center;
+      padding: 0;
+    }
+
+    /* Header uniform */
     #inventoryTable th {
-      height: 34px;
-      font-size: 14px;
       background: #f5c9d6;
+      font-size: 15px;
+      font-weight: 600;
+      height: 38px;
       position: sticky;
       top: 80px;
       z-index: 500;
@@ -280,10 +315,10 @@
     }
 
     @media (max-width: 900px) {
-      #inventoryTable th { font-size: 12px; padding: 4px; }
+      #inventoryTable th { font-size: 13px; }
       #inventoryTable input,
       #inventoryTable select {
-        font-size: 16px;
+        font-size: 15px;
         height: 32px;
       }
       .checkbox-cell input { transform: scale(1.3); }
@@ -368,13 +403,13 @@
           </td>
 
           <td><input type="text" class="desc-input"></td>
-          <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
-          <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
+          <td><input type="number" class="qty-input" min="0" value="0"></td>
+          <td><input type="number" class="price-input" min="0" step="0.01"></td>
 
           <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
 
           <td>
-            <select class="cashapp-select small-input">
+            <select class="cashapp-select">
               <option value="">_</option>
               <option value="Cash">Cash</option>
               <option value="App">App</option>
@@ -382,7 +417,7 @@
           </td>
 
           <td>
-            <select class="initials-select small-input">
+            <select class="initials-select">
               <option value="">_</option>
               <option value="GMG">GMG</option>
               <option value="GC">GC</option>
@@ -489,27 +524,4 @@
         document.getElementById("profitTotal").textContent = formatMoney(profit);
         document.getElementById("cashTotal").textContent = formatMoney(cash);
         document.getElementById("appTotal").textContent = formatMoney(app);
-        document.getElementById("appTaxTotal").textContent = formatMoney(appTaxTotal);
-        document.getElementById("gabyTotal").textContent = formatMoney(gaby);
-        document.getElementById("gingerTotal").textContent = formatMoney(ginger);
-      }
-
-      /* Add row */
-      function addRow() {
-        const tbody = document.getElementById("inventoryBody");
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-          <td>
-            <select class="name-select">
-              <option value="">_</option>
-              <option value="Gaby">Gaby</option>
-              <option value="Ginger">Ginger</option>
-            </select>
-          </td>
-          <td><input type="text" class="desc-input"></td>
-          <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
-          <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
-          <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
-          <td>
-            <select class="cashapp
+        document.getElementById("appTaxTotal").textContent
