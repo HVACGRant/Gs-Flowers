@@ -77,6 +77,15 @@
       transition: color 0.6s ease, text-shadow 0.6s ease;
     }
 
+    /* LOGO FADE-IN */
+    .logo-fade {
+      opacity: 0;
+      transition: opacity 1.4s ease;
+    }
+    .logo-fade.visible {
+      opacity: 1;
+    }
+
     .cover-gsflowers:hover {
       color: #d4a857;
       text-shadow: 0 0 18px rgba(212, 168, 87, 0.8);
@@ -181,7 +190,7 @@
 
     /* ---------------- CONTENT ---------------- */
     .content {
-      padding: 160px 16px 24px; /* moved down for visibility */
+      padding: 160px 16px 24px;
       opacity: 0;
       transition: opacity 1.2s ease;
       overflow-x: auto;
@@ -217,6 +226,69 @@
       z-index: 500;
     }
 
+    /* ---------------- FLOATING ADD ROW BUTTON ---------------- */
+    .floating-add-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      z-index: 2000;
+      opacity: 0.9;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .floating-add-btn:hover {
+      transform: scale(1.08);
+      opacity: 1;
+    }
+
+    @media (max-width: 600px) {
+      .floating-add-btn {
+        padding: 12px 18px;
+        font-size: 16px;
+      }
+    }
+
+    /* ---------------- RESPONSIVE FIXES ---------------- */
+    @media (max-width: 600px) {
+      .cover-wrapper { height: 220px; }
+      .cover-wrapper::before { width: 240px; height: 240px; }
+      .cover-gsflowers { font-size: 72px; }
+      #enterBtn { font-size: 15px; padding: 8px 16px; }
+      .content { padding-top: 120px; }
+      #inventoryTable { min-width: 650px; }
+    }
+
+    @media (max-width: 700px) {
+      .totals-bar {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 0 8px;
+      }
+      .total-item {
+        flex: 0 0 auto;
+        min-width: 90px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      #inventoryTable th { font-size: 12px; padding: 4px; }
+      #inventoryTable input,
+      #inventoryTable select {
+        font-size: 16px;
+        height: 32px;
+      }
+      .checkbox-cell input { transform: scale(1.3); }
+    }
+
   </style>
 </head>
 <body>
@@ -224,7 +296,7 @@
   <!-- ---------------- COVER SHEET ---------------- -->
   <div id="coverSheet">
     <div class="cover-wrapper">
-      <div class="cover-gsflowers">G's Flowers</div>
+      <div class="cover-gsflowers logo-fade">G's Flowers</div>
       <button id="enterBtn">Enter</button>
     </div>
   </div>
@@ -323,9 +395,15 @@
     </table>
   </div>
 
+  <!-- FLOATING ADD ROW BUTTON -->
+  <button id="addRowBtn" class="floating-add-btn">+ Row</button>
+
   <!-- ---------------- SCRIPT ---------------- -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+
+      /* Fade-in logo */
+      document.querySelector(".logo-fade").classList.add("visible");
 
       /* Fade-out cover sheet */
       document.getElementById("enterBtn").addEventListener("click", () => {
@@ -434,87 +512,4 @@
           <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
           <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
           <td>
-            <select class="cashapp-select small-input">
-              <option value="">_</option>
-              <option value="Cash">Cash</option>
-              <option value="App">App</option>
-            </select>
-          </td>
-          <td>
-            <select class="initials-select small-input">
-              <option value="">_</option>
-              <option value="GMG">GMG</option>
-              <option value="GC">GC</option>
-            </select>
-          </td>
-          <td class="app-tax-cell">$0.00</td>
-        `;
-
-        tbody.appendChild(tr);
-        wireRow(tr);
-        recalc();
-        return tr;
-      }
-
-      /* Navigation + auto-add-row logic */
-      function wireRow(row) {
-        row.querySelectorAll("input, select").forEach(el => {
-          el.addEventListener("input", recalc);
-          el.addEventListener("change", recalc);
-
-          el.addEventListener("keydown", e => {
-            const cell = el.closest("td");
-            const rowEl = el.closest("tr");
-            const cells = [...rowEl.children];
-            const index = cells.indexOf(cell);
-
-            if (e.key === "ArrowLeft" && index > 0) {
-              e.preventDefault();
-              cells[index - 1].querySelector("input, select").focus();
-            }
-
-            if (e.key === "ArrowRight" && index < cells.length - 1) {
-              e.preventDefault();
-              cells[index + 1].querySelector("input, select").focus();
-            }
-
-            if (e.key === "ArrowUp") {
-              const prev = rowEl.previousElementSibling;
-              if (prev) {
-                e.preventDefault();
-                prev.children[index].querySelector("input, select").focus();
-              }
-            }
-
-            if (e.key === "ArrowDown") {
-              const next = rowEl.nextElementSibling;
-              if (next) {
-                e.preventDefault();
-                next.children[index].querySelector("input, select").focus();
-              }
-            }
-          });
-        });
-
-        const priceInput = row.querySelector(".price-input");
-
-        priceInput.addEventListener("keydown", e => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            const newRow = addRow();
-            newRow.querySelector(".name-select").focus();
-          }
-        });
-      }
-
-      /* Wire the very first row on page load */
-      wireRow(document.querySelector("#inventoryBody tr"));
-
-      /* Initial calculation */
-      recalc();
-
-    }); // END DOMContentLoaded
-  </script>
-
-</body>
-</html>
+            <select class="cashapp
