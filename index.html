@@ -45,20 +45,15 @@
       animation: fadeIn 2s ease forwards;
     }
 
-    .cover-wrapper::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 420px;
-      height: 420px;
-      transform: translate(-50%, -50%);
-      background-image: url('https://cdn.pixabay.com/photo/2017/08/30/07/52/flower-2695079_1280.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      opacity: 0.25;
-      z-index: 1;
-      animation: fadeIn 2.5s ease forwards;
+    .cover-title-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      position: relative;
+      z-index: 5;
     }
 
     @keyframes fadeIn {
@@ -69,15 +64,10 @@
     .cover-gsflowers {
       font-family: "Great Vibes", cursive;
       font-size: 140px;
-      position: relative;
-      z-index: 3;
-      line-height: 0.9;
       color: #000;
       text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
-      transition: color 0.6s ease, text-shadow 0.6s ease;
     }
 
-    /* LOGO FADE-IN */
     .logo-fade {
       opacity: 0;
       transition: opacity 1.4s ease;
@@ -86,69 +76,21 @@
       opacity: 1;
     }
 
-    .cover-gsflowers:hover {
-      color: #d4a857;
-      text-shadow: 0 0 18px rgba(212, 168, 87, 0.8);
-    }
-
-    .cover-gsflowers::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -20px;
-      transform: translateX(-50%);
-      width: 260px;
-      height: 60px;
-      background-image: url('https://cdn.pixabay.com/photo/2016/12/23/14/44/divider-1921600_1280.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      opacity: 0.8;
-      animation: fadeIn 3s ease forwards;
-    }
-
-    #enterBtn {
-      margin-top: 40px;
-      padding: 10px 24px;
+    .enter-centered {
+      margin-top: 30px;
+      padding: 12px 28px;
       background: #000;
       color: #fff;
       border: none;
-      font-size: 18px;
+      font-size: 20px;
       cursor: pointer;
-      font-family: "Playfair Display", serif;
-      z-index: 5;
-      animation: fadeIn 3.5s ease forwards;
-    }
-
-    #enterBtn:hover {
-      background: #333;
-      transform: scale(1.05);
+      border-radius: 6px;
       transition: 0.3s ease;
     }
 
-    /* ---------------- RESET BUTTON ---------------- */
-    #resetPageBtn {
-      margin-bottom: 12px;
-      padding: 8px 16px;
-      background: #ff4d4d;
-      color: #fff;
-      border: none;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    #resetPageBtn:hover {
-      background: #d93636;
-    }
-
-    /* ---------------- FADE GROUP ---------------- */
-    .fadeGroup {
-      transition: opacity 0.4s ease;
-    }
-
-    .fadeGroup.hidden {
-      opacity: 0;
+    .enter-centered:hover {
+      background: #333;
+      transform: scale(1.05);
     }
 
     /* ---------------- TOTALS BAR ---------------- */
@@ -164,7 +106,6 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 16px;
-      box-sizing: border-box;
       z-index: 1000;
       opacity: 0;
       transition: opacity 1.2s ease;
@@ -173,14 +114,11 @@
     .total-item {
       flex: 1;
       text-align: center;
-      padding: 4px 8px;
     }
 
     .total-label {
       font-family: "Great Vibes", cursive;
       font-size: 18px;
-      display: block;
-      cursor: pointer;
     }
 
     .total-value {
@@ -194,10 +132,9 @@
       opacity: 0;
       transition: opacity 1.2s ease;
       overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
     }
 
-    /* ---------------- TIGHT & CLEAN TABLE ---------------- */
+    /* ---------------- TABLE ---------------- */
     #inventoryTable {
       border-collapse: collapse;
       width: 100%;
@@ -211,169 +148,96 @@
       height: 38px;
     }
 
-    /* Wider Description column */
-    #inventoryTable td:nth-child(2),
-    #inventoryTable th:nth-child(2) {
+    #inventoryTable th:nth-child(2),
+    #inventoryTable td:nth-child(2) {
       width: 28%;
       text-align: left;
     }
 
-    /* Inputs uniform */
     #inventoryTable input,
     #inventoryTable select {
       width: 100%;
       height: 32px;
       font-size: 15px;
       padding: 4px 6px;
-      margin: 0;
-      box-sizing: border-box;
       border: 1px solid #aaa;
       border-radius: 4px;
+      box-sizing: border-box;
     }
 
-    /* Left-align Description input */
     .desc-input {
       text-align: left;
     }
 
-    /* Checkbox centered */
     .checkbox-cell input {
       transform: scale(1.2);
-      margin: 0;
     }
 
-    /* App Tax cell */
     .app-tax-cell {
       font-weight: 600;
       font-size: 15px;
-      text-align: center;
-      padding: 0;
     }
 
-    /* Header uniform */
     #inventoryTable th {
       background: #f5c9d6;
       font-size: 15px;
       font-weight: 600;
-      height: 38px;
       position: sticky;
       top: 80px;
       z-index: 500;
     }
 
-    /* ---------------- FLOATING ADD ROW BUTTON ---------------- */
+    /* ---------------- SMALLER +ROW BUTTON ---------------- */
     .floating-add-btn {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 18px;
+      right: 18px;
       background: #000;
       color: #fff;
       border: none;
-      padding: 14px 20px;
-      border-radius: 50px;
-      font-size: 18px;
+      padding: 8px 14px;
+      border-radius: 40px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
       z-index: 2000;
       opacity: 0.9;
       transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
     .floating-add-btn:hover {
-      transform: scale(1.08);
+      transform: scale(1.06);
       opacity: 1;
-    }
-
-    @media (max-width: 600px) {
-      .floating-add-btn {
-        padding: 12px 18px;
-        font-size: 16px;
-      }
-    }
-
-    /* ---------------- RESPONSIVE FIXES ---------------- */
-    @media (max-width: 600px) {
-      .cover-wrapper { height: 220px; }
-      .cover-wrapper::before { width: 240px; height: 240px; }
-      .cover-gsflowers { font-size: 72px; }
-      #enterBtn { font-size: 15px; padding: 8px 16px; }
-      .content { padding-top: 120px; }
-      #inventoryTable { min-width: 650px; }
-    }
-
-    @media (max-width: 700px) {
-      .totals-bar {
-        overflow-x: auto;
-        white-space: nowrap;
-        padding: 0 8px;
-      }
-      .total-item {
-        flex: 0 0 auto;
-        min-width: 90px;
-      }
-    }
-
-    @media (max-width: 900px) {
-      #inventoryTable th { font-size: 13px; }
-      #inventoryTable input,
-      #inventoryTable select {
-        font-size: 15px;
-        height: 32px;
-      }
-      .checkbox-cell input { transform: scale(1.3); }
     }
 
   </style>
 </head>
+
 <body>
 
-  <!-- ---------------- COVER SHEET ---------------- -->
+  <!-- COVER SHEET -->
   <div id="coverSheet">
     <div class="cover-wrapper">
-      <div class="cover-gsflowers logo-fade">G's Flowers</div>
-      <button id="enterBtn">Enter</button>
+      <div class="cover-title-block">
+        <div class="cover-gsflowers logo-fade">G's Flowers</div>
+        <button id="enterBtn" class="enter-centered">Enter</button>
+      </div>
     </div>
   </div>
 
-  <!-- ---------------- TOTALS BAR ---------------- -->
+  <!-- TOTALS BAR -->
   <div id="totalsBar" class="totals-bar">
-    <div class="total-item">
-      <span class="total-label">Inventory</span>
-      <span class="total-value" id="inventoryTotal">$0.00</span>
-    </div>
-    <div class="total-item">
-      <span class="total-label">Profit</span>
-      <span class="total-value" id="profitTotal">$0.00</span>
-    </div>
-    <div class="total-item">
-      <span class="total-label">Cash</span>
-      <span class="total-value" id="cashTotal">$0.00</span>
-    </div>
-    <div class="total-item">
-      <span class="total-label">App</span>
-      <span class="total-value" id="appTotal">$0.00</span>
-    </div>
-    <div class="total-item">
-      <span class="total-label">App Tax</span>
-      <span class="total-value" id="appTaxTotal">$0.00</span>
-    </div>
-    <div class="total-item fadeGroup">
-      <span class="total-label">Gaby</span>
-      <span class="total-value" id="gabyTotal">$0.00</span>
-    </div>
-    <div class="total-item fadeGroup">
-      <span class="total-label">Ginger</span>
-      <span class="total-value" id="gingerTotal">$0.00</span>
-    </div>
-    <div class="total-item" style="flex:0 0 auto;">
-      <button id="toggleFade" style="background:none;border:1px solid #fff;color:#fff;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:12px;">
-        Toggle G/G
-      </button>
-    </div>
+    <div class="total-item"><span class="total-label">Inventory</span><span id="inventoryTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">Profit</span><span id="profitTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">Cash</span><span id="cashTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">App</span><span id="appTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">App Tax</span><span id="appTaxTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">Gaby</span><span id="gabyTotal">$0.00</span></div>
+    <div class="total-item"><span class="total-label">Ginger</span><span id="gingerTotal">$0.00</span></div>
   </div>
 
-  <!-- ---------------- MAIN CONTENT ---------------- -->
+  <!-- MAIN CONTENT -->
   <div class="content" id="contentArea">
 
     <button id="resetPageBtn">Reset Page</button>
@@ -430,53 +294,22 @@
     </table>
   </div>
 
-  <!-- FLOATING ADD ROW BUTTON -->
+  <!-- SMALLER +ROW BUTTON -->
   <button id="addRowBtn" class="floating-add-btn">+ Row</button>
 
-  <!-- ---------------- SCRIPT ---------------- -->
+  <!-- SCRIPT -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
 
-      /* Fade-in logo */
       document.querySelector(".logo-fade").classList.add("visible");
 
-      /* Fade-out cover sheet */
       document.getElementById("enterBtn").addEventListener("click", () => {
-        const cover = document.getElementById("coverSheet");
-        const totals = document.getElementById("totalsBar");
-        const content = document.getElementById("contentArea");
-
-        cover.style.opacity = "0";
-
+        document.getElementById("coverSheet").style.opacity = "0";
         setTimeout(() => {
-          cover.style.display = "none";
-          totals.style.opacity = "1";
-          content.style.opacity = "1";
+          document.getElementById("coverSheet").style.display = "none";
+          document.getElementById("totalsBar").style.opacity = "1";
+          document.getElementById("contentArea").style.opacity = "1";
         }, 1200);
-      });
-
-      /* Reset page but keep saved data */
-      document.getElementById("resetPageBtn").addEventListener("click", () => {
-        const inputs = document.querySelectorAll("input[type='text'], input[type='number']");
-        inputs.forEach(i => i.value = "");
-
-        const selects = document.querySelectorAll("select");
-        selects.forEach(s => s.value = "";
-
-        const checks = document.querySelectorAll("input[type='checkbox']");
-        checks.forEach(c => c.checked = false);
-
-        const taxCells = document.querySelectorAll(".app-tax-cell");
-        taxCells.forEach(c => c.textContent = "$0.00");
-
-        recalc();
-      });
-
-      /* Toggle fade for Gaby & Ginger totals only */
-      document.getElementById("toggleFade").addEventListener("click", () => {
-        document.querySelectorAll(".fadeGroup").forEach(el => {
-          el.classList.toggle("hidden");
-        });
       });
 
       function parseNumber(v) {
@@ -488,7 +321,6 @@
         return "$" + v.toFixed(2);
       }
 
-      /* Recalculate totals */
       function recalc() {
         const rows = [...document.querySelectorAll("#inventoryBody tr")];
 
@@ -529,7 +361,6 @@
         document.getElementById("gingerTotal").textContent = formatMoney(ginger);
       }
 
-      /* Add row */
       function addRow() {
         const tbody = document.getElementById("inventoryBody");
         const tr = document.createElement("tr");
@@ -570,58 +401,24 @@
         return tr;
       }
 
-      /* Wire row events */
       function wireRow(row) {
         row.querySelectorAll("input, select").forEach(el => {
           el.addEventListener("input", recalc);
           el.addEventListener("change", recalc);
-
-          el.addEventListener("keydown", e => {
-            const cell = el.closest("td");
-            const rowEl = el.closest("tr");
-            const cells = [...rowEl.children];
-            const index = cells.indexOf(cell);
-
-            if (e.key === "ArrowLeft" && index > 0) {
-              e.preventDefault();
-              cells[index - 1].querySelector("input, select").focus();
-            }
-
-            if (e.key === "ArrowRight" && index < cells.length - 1) {
-              e.preventDefault();
-              cells[index + 1].querySelector("input, select").focus();
-            }
-
-            if (e.key === "ArrowUp") {
-              const prev = rowEl.previousElementSibling;
-              if (prev) {
-                e.preventDefault();
-                prev.children[index].querySelector("input, select").focus();
-              }
-            }
-
-            if (e.key === "ArrowDown") {
-              const next = rowEl.nextElementSibling;
-              if (next) {
-                e.preventDefault();
-                next.children[index].querySelector("input, select").focus();
-              }
-            }
-          });
-        });
-
-        const priceInput = row.querySelector(".price-input");
-        priceInput.addEventListener("keydown", e => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            const newRow = addRow();
-            newRow.querySelector(".name-select").focus();
-          }
         });
       }
 
-      /* Wire first row */
       wireRow(document.querySelector("#inventoryBody tr"));
 
-      /* Floating Add Row button */
-      document.getElementById("addRowBtn").addEventListener("click",
+      document.getElementById("addRowBtn").addEventListener("click", () => {
+        const newRow = addRow();
+        newRow.querySelector(".name-select").focus();
+      });
+
+      recalc();
+
+    });
+  </script>
+
+</body>
+</html>
