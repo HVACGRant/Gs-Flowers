@@ -115,6 +115,7 @@
       transform: scale(1.05);
       transition: 0.3s ease;
     }
+
     /* ---------------- RESET BUTTON ---------------- */
     #resetPageBtn {
       margin-bottom: 12px;
@@ -246,6 +247,53 @@
     }
   </style>
 </head>
+<body>
+
+  <!-- ---------------- COVER SHEET ---------------- -->
+  <div id="coverSheet">
+    <div class="cover-wrapper">
+      <div class="cover-gsflowers">G's Flowers</div>
+      <button id="enterBtn">Enter</button>
+    </div>
+  </div>
+
+  <!-- ---------------- TOTALS BAR ---------------- -->
+  <div id="totalsBar" class="totals-bar">
+    <div class="total-item">
+      <span class="total-label">Inventory</span>
+      <span class="total-value" id="inventoryTotal">$0.00</span>
+    </div>
+    <div class="total-item">
+      <span class="total-label">Profit</span>
+      <span class="total-value" id="profitTotal">$0.00</span>
+    </div>
+    <div class="total-item">
+      <span class="total-label">Cash</span>
+      <span class="total-value" id="cashTotal">$0.00</span>
+    </div>
+    <div class="total-item">
+      <span class="total-label">App</span>
+      <span class="total-value" id="appTotal">$0.00</span>
+    </div>
+    <div class="total-item">
+      <span class="total-label">App Tax</span>
+      <span class="total-value" id="appTaxTotal">$0.00</span>
+    </div>
+    <div class="total-item fadeGroup">
+      <span class="total-label">Gaby</span>
+      <span class="total-value" id="gabyTotal">$0.00</span>
+    </div>
+    <div class="total-item fadeGroup">
+      <span class="total-label">Ginger</span>
+      <span class="total-value" id="gingerTotal">$0.00</span>
+    </div>
+    <div class="total-item" style="flex:0 0 auto;">
+      <button id="toggleFade" style="background:none;border:1px solid #fff;color:#fff;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:12px;">
+        Toggle G/G
+      </button>
+    </div>
+  </div>
+
   <!-- ---------------- MAIN CONTENT ---------------- -->
   <div class="content" id="contentArea">
 
@@ -305,198 +353,196 @@
 
   <!-- ---------------- SCRIPT ---------------- -->
   <script>
+    document.addEventListener("DOMContentLoaded", () => {
 
-document.addEventListener("DOMContentLoaded", () => {
+      /* Fade-out cover sheet */
+      document.getElementById("enterBtn").addEventListener("click", () => {
+        const cover = document.getElementById("coverSheet");
+        const totals = document.getElementById("totalsBar");
+        const content = document.getElementById("contentArea");
 
-  /* Fade-out cover sheet */
-  document.getElementById("enterBtn").addEventListener("click", () => {
-    const cover = document.getElementById("coverSheet");
-    const totals = document.getElementById("totalsBar");
-    const content = document.getElementById("contentArea");
+        cover.style.opacity = "0";
 
-    cover.style.opacity = "0";
-
-    setTimeout(() => {
-      cover.style.display = "none";
-      totals.style.opacity = "1";
-      content.style.opacity = "1";
-    }, 1200);
-  });
-
-  /* Reset page but keep saved data */
-  document.getElementById("resetPageBtn").addEventListener("click", () => {
-    const inputs = document.querySelectorAll("input[type='text'], input[type='number']");
-    inputs.forEach(i => i.value = "");
-
-    const selects = document.querySelectorAll("select");
-    selects.forEach(s => s.value = "");
-
-    const checks = document.querySelectorAll("input[type='checkbox']");
-    checks.forEach(c => c.checked = false);
-
-    const taxCells = document.querySelectorAll(".app-tax-cell");
-    taxCells.forEach(c => c.textContent = "$0.00");
-
-    recalc();
-  });
-
-  /* Toggle fade for Gaby & Ginger totals only */
-  document.getElementById("toggleFade").addEventListener("click", () => {
-    document.querySelectorAll(".fadeGroup").forEach(el => {
-      el.classList.toggle("hidden");
-    });
-  });
-
-  function parseNumber(v) {
-    const n = parseFloat(v);
-    return isNaN(n) ? 0 : n;
-  }
-
-  function formatMoney(v) {
-    return "$" + v.toFixed(2);
-  }
-  /* Recalculate totals */
-  function recalc() {
-    const rows = [...document.querySelectorAll("#inventoryBody tr")];
-
-    let inventory = 0, profit = 0, cash = 0, app = 0, appTaxTotal = 0, gaby = 0, ginger = 0;
-
-    rows.forEach(row => {
-      const name = row.querySelector(".name-select").value;
-      const qty = parseNumber(row.querySelector(".qty-input").value);
-      const price = parseNumber(row.querySelector(".price-input").value);
-      const sold = row.querySelector(".sold-checkbox").checked;
-      const cashapp = row.querySelector(".cashapp-select").value;
-
-      const line = price * qty;
-
-      inventory += line;
-
-      if (sold) profit += line;
-      if (sold && cashapp === "Cash") cash += line;
-      if (sold && cashapp === "App") app += line;
-
-      let appTax = 0;
-      if (sold && cashapp === "App") {
-        appTax = (price * 0.025) + 0.15;
-        appTaxTotal += appTax;
-      }
-      row.querySelector(".app-tax-cell").textContent = formatMoney(appTax);
-
-      if (name === "Gaby") gaby += line;
-      if (name === "Ginger") ginger += line;
-    });
-
-    document.getElementById("inventoryTotal").textContent = formatMoney(inventory);
-    document.getElementById("profitTotal").textContent = formatMoney(profit);
-    document.getElementById("cashTotal").textContent = formatMoney(cash);
-    document.getElementById("appTotal").textContent = formatMoney(app);
-    document.getElementById("appTaxTotal").textContent = formatMoney(appTaxTotal);
-    document.getElementById("gabyTotal").textContent = formatMoney(gaby);
-    document.getElementById("gingerTotal").textContent = formatMoney(ginger);
-  }
-
-  /* Add row */
-  function addRow() {
-    const tbody = document.getElementById("inventoryBody");
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
-      <td>
-        <select class="name-select">
-          <option value="">_</option>
-          <option value="Gaby">Gaby</option>
-          <option value="Ginger">Ginger</option>
-        </select>
-      </td>
-      <td><input type="text" class="desc-input"></td>
-      <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
-      <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
-      <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
-      <td>
-        <select class="cashapp-select small-input">
-          <option value="">_</option>
-          <option value="Cash">Cash</option>
-          <option value="App">App</option>
-        </select>
-      </td>
-      <td>
-        <select class="initials-select small-input">
-          <option value="">_</option>
-          <option value="GMG">GMG</option>
-          <option value="GC">GC</option>
-        </select>
-      </td>
-      <td class="app-tax-cell">$0.00</td>
-    `;
-
-    tbody.appendChild(tr);
-    wireRow(tr);
-    recalc();
-    return tr;
-  }
-
-  /* Navigation + auto-add-row logic */
-  function wireRow(row) {
-    row.querySelectorAll("input, select").forEach(el => {
-      el.addEventListener("input", recalc);
-      el.addEventListener("change", recalc);
-
-      el.addEventListener("keydown", e => {
-        const cell = el.closest("td");
-        const rowEl = el.closest("tr");
-        const cells = [...rowEl.children];
-        const index = cells.indexOf(cell);
-
-        if (e.key === "ArrowLeft" && index > 0) {
-          e.preventDefault();
-          cells[index - 1].querySelector("input, select").focus();
-        }
-
-        if (e.key === "ArrowRight" && index < cells.length - 1) {
-          e.preventDefault();
-          cells[index + 1].querySelector("input, select").focus();
-        }
-
-        if (e.key === "ArrowUp") {
-          const prev = rowEl.previousElementSibling;
-          if (prev) {
-            e.preventDefault();
-            prev.children[index].querySelector("input, select").focus();
-          }
-        }
-
-        if (e.key === "ArrowDown") {
-          const next = rowEl.nextElementSibling;
-          if (next) {
-            e.preventDefault();
-            next.children[index].querySelector("input, select").focus();
-          }
-        }
+        setTimeout(() => {
+          cover.style.display = "none";
+          totals.style.opacity = "1";
+          content.style.opacity = "1";
+        }, 1200);
       });
-    });
 
-    const priceInput = row.querySelector(".price-input");
+      /* Reset page but keep saved data */
+      document.getElementById("resetPageBtn").addEventListener("click", () => {
+        const inputs = document.querySelectorAll("input[type='text'], input[type='number']");
+        inputs.forEach(i => i.value = "");
 
-    priceInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        const newRow = addRow();
-        newRow.querySelector(".name-select").focus();
+        const selects = document.querySelectorAll("select");
+        selects.forEach(s => s.value = "");
+
+        const checks = document.querySelectorAll("input[type='checkbox']");
+        checks.forEach(c => c.checked = false);
+
+        const taxCells = document.querySelectorAll(".app-tax-cell");
+        taxCells.forEach(c => c.textContent = "$0.00");
+
+        recalc();
+      });
+
+      /* Toggle fade for Gaby & Ginger totals only */
+      document.getElementById("toggleFade").addEventListener("click", () => {
+        document.querySelectorAll(".fadeGroup").forEach(el => {
+          el.classList.toggle("hidden");
+        });
+      });
+
+      function parseNumber(v) {
+        const n = parseFloat(v);
+        return isNaN(n) ? 0 : n;
       }
 
-      if (e.key ===
-    /* Wire the very first row on page load */
-    wireRow(document.querySelector("#inventoryBody tr"));
+      function formatMoney(v) {
+        return "$" + v.toFixed(2);
+      }
 
-    /* Initial calculation */
-    recalc();
+      /* Recalculate totals */
+      function recalc() {
+        const rows = [...document.querySelectorAll("#inventoryBody tr")];
 
-}); // END DOMContentLoaded
+        let inventory = 0, profit = 0, cash = 0, app = 0, appTaxTotal = 0, gaby = 0, ginger = 0;
 
+        rows.forEach(row => {
+          const name = row.querySelector(".name-select").value;
+          const qty = parseNumber(row.querySelector(".qty-input").value);
+          const price = parseNumber(row.querySelector(".price-input").value);
+          const sold = row.querySelector(".sold-checkbox").checked;
+          const cashapp = row.querySelector(".cashapp-select").value;
+
+          const line = price * qty;
+
+          inventory += line;
+
+          if (sold) profit += line;
+          if (sold && cashapp === "Cash") cash += line;
+          if (sold && cashapp === "App") app += line;
+
+          let appTax = 0;
+          if (sold && cashapp === "App") {
+            appTax = (price * 0.025) + 0.15;
+            appTaxTotal += appTax;
+          }
+          row.querySelector(".app-tax-cell").textContent = formatMoney(appTax);
+
+          if (name === "Gaby") gaby += line;
+          if (name === "Ginger") ginger += line;
+        });
+
+        document.getElementById("inventoryTotal").textContent = formatMoney(inventory);
+        document.getElementById("profitTotal").textContent = formatMoney(profit);
+        document.getElementById("cashTotal").textContent = formatMoney(cash);
+        document.getElementById("appTotal").textContent = formatMoney(app);
+        document.getElementById("appTaxTotal").textContent = formatMoney(appTaxTotal);
+        document.getElementById("gabyTotal").textContent = formatMoney(gaby);
+        document.getElementById("gingerTotal").textContent = formatMoney(ginger);
+      }
+
+      /* Add row */
+      function addRow() {
+        const tbody = document.getElementById("inventoryBody");
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>
+            <select class="name-select">
+              <option value="">_</option>
+              <option value="Gaby">Gaby</option>
+              <option value="Ginger">Ginger</option>
+            </select>
+          </td>
+          <td><input type="text" class="desc-input"></td>
+          <td><input type="number" class="qty-input small-input" min="0" value="0"></td>
+          <td><input type="number" class="price-input small-input" min="0" step="0.01"></td>
+          <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
+          <td>
+            <select class="cashapp-select small-input">
+              <option value="">_</option>
+              <option value="Cash">Cash</option>
+              <option value="App">App</option>
+            </select>
+          </td>
+          <td>
+            <select class="initials-select small-input">
+              <option value="">_</option>
+              <option value="GMG">GMG</option>
+              <option value="GC">GC</option>
+            </select>
+          </td>
+          <td class="app-tax-cell">$0.00</td>
+        `;
+
+        tbody.appendChild(tr);
+        wireRow(tr);
+        recalc();
+        return tr;
+      }
+
+      /* Navigation + auto-add-row logic */
+      function wireRow(row) {
+        row.querySelectorAll("input, select").forEach(el => {
+          el.addEventListener("input", recalc);
+          el.addEventListener("change", recalc);
+
+          el.addEventListener("keydown", e => {
+            const cell = el.closest("td");
+            const rowEl = el.closest("tr");
+            const cells = [...rowEl.children];
+            const index = cells.indexOf(cell);
+
+            if (e.key === "ArrowLeft" && index > 0) {
+              e.preventDefault();
+              cells[index - 1].querySelector("input, select").focus();
+            }
+
+            if (e.key === "ArrowRight" && index < cells.length - 1) {
+              e.preventDefault();
+              cells[index + 1].querySelector("input, select").focus();
+            }
+
+            if (e.key === "ArrowUp") {
+              const prev = rowEl.previousElementSibling;
+              if (prev) {
+                e.preventDefault();
+                prev.children[index].querySelector("input, select").focus();
+              }
+            }
+
+            if (e.key === "ArrowDown") {
+              const next = rowEl.nextElementSibling;
+              if (next) {
+                e.preventDefault();
+                next.children[index].querySelector("input, select").focus();
+              }
+            }
+          });
+        });
+
+        const priceInput = row.querySelector(".price-input");
+
+        priceInput.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const newRow = addRow();
+            newRow.querySelector(".name-select").focus();
+          }
+        });
+      }
+
+      /* Wire the very first row on page load */
+      wireRow(document.querySelector("#inventoryBody tr"));
+
+      /* Initial calculation */
+      recalc();
+
+    }); // END DOMContentLoaded
   </script>
 
 </body>
 </html>
-
-
