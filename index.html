@@ -1,371 +1,179 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link
+  href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap"
+  rel="stylesheet"
+/>
 
-  <title>G's Flowers Inventory</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: "Playfair Display", serif;
-      background: #f9e3ea;
-      color: #000;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* ---------------- COVER SHEET ---------------- */
-    #coverSheet {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #f9e3ea url('https://cdn.pixabay.com/photo/2016/11/29/03/53/paper-1868104_1280.jpg');
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      opacity: 1;
-      transition: opacity 1.2s ease;
-    }
-
-    .cover-wrapper {
-      position: relative;
-      text-align: center;
-      width: 100%;
-      height: 320px;
-      animation: fadeIn 2s ease forwards;
-    }
-
-    .cover-title-block {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      width: 100%;
-      position: relative;
-      z-index: 5;
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    .cover-gsflowers {
-      font-family: "Great Vibes", cursive;
-      font-size: 140px;
-      color: #000;
-      text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
-    }
-
-    .logo-fade {
-      opacity: 0;
-      transition: opacity 1.4s ease;
-    }
-    .logo-fade.visible {
-      opacity: 1;
-    }
-
-    .enter-centered {
-      margin-top: 30px;
-      padding: 12px 28px;
-      background: #000;
-      color: #fff;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: 0.3s ease;
-    }
-
-    .enter-centered:hover {
-      background: #333;
-      transform: scale(1.05);
-    }
-
-    /* ---------------- TOTALS BAR ---------------- */
-    .totals-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 80px;
-      background: #000;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 1.2s ease;
-    }
-
-    .total-item {
-      flex: 1;
-      text-align: center;
-    }
-
-    .total-label {
-      font-family: "Great Vibes", cursive;
-      font-size: 18px;
-    }
-
-    .total-value {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    /* ---------------- CONTENT ---------------- */
-    .content {
-      padding: 160px 16px 24px;
-      opacity: 0;
-      transition: opacity 1.2s ease;
-      overflow-x: auto;
-    }
-
-    /* ---------------- TABLE ---------------- */
-    #inventoryTable {
-      border-collapse: collapse;
-      width: 100%;
-    }
-
-    #inventoryTable th,
-    #inventoryTable td {
-      padding: 4px 6px;
-      text-align: center;
-      vertical-align: middle;
-      height: 38px;
-    }
-
-    #inventoryTable th:nth-child(2),
-    #inventoryTable td:nth-child(2) {
-      width: 28%;
-      text-align: left;
-    }
-
-    #inventoryTable input,
-    #inventoryTable select {
-      width: 100%;
-      height: 32px;
-      font-size: 15px;
-      padding: 4px 6px;
-      border: 1px solid #aaa;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    .desc-input {
-      text-align: left;
-    }
-
-    .checkbox-cell input {
-      transform: scale(1.2);
-    }
-
-    .app-tax-cell {
-      font-weight: 600;
-      font-size: 15px;
-    }
-
-    #inventoryTable th {
-      background: #f5c9d6;
-      font-size: 15px;
-      font-weight: 600;
-      position: sticky;
-      top: 80px;
-      z-index: 500;
-    }
-
-    /* ---------------- SMALLER +ROW BUTTON ---------------- */
-    .floating-add-btn {
-      position: fixed;
-      bottom: 18px;
-      right: 18px;
-      background: #000;
-      color: #fff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 40px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
-      z-index: 2000;
-      opacity: 0.9;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .floating-add-btn:hover {
-      transform: scale(1.06);
-      opacity: 1;
-    }
-
-  </style>
-</head>
-
-<body>
-
-  <!-- COVER SHEET -->
-  <div id="coverSheet">
-    <div class="cover-wrapper">
-      <div class="cover-title-block">
-        <div class="cover-gsflowers logo-fade">G's Flowers</div>
-        <button id="enterBtn" class="enter-centered">Enter</button>
-      </div>
-    </div>
+<!-- COVER SHEET -->
+<div id="coverSheet">
+  <div class="cover-title-block">
+    <div class="cover-gsflowers" id="titleText">G's Flowers</div>
+    <button id="enterBtn" class="enter-centered">Enter</button>
   </div>
+</div>
 
-  <!-- TOTALS BAR -->
-  <div id="totalsBar" class="totals-bar">
-    <div class="total-item"><span class="total-label">Inventory</span><span id="inventoryTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">Profit</span><span id="profitTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">Cash</span><span id="cashTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">App</span><span id="appTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">App Tax</span><span id="appTaxTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">Gaby</span><span id="gabyTotal">$0.00</span></div>
-    <div class="total-item"><span class="total-label">Ginger</span><span id="gingerTotal">$0.00</span></div>
+<!-- TOTALS BAR -->
+<div id="totalsBar" class="totals-bar">
+  <div class="total-item">
+    <span class="total-label">Inventory</span
+    ><span id="inventoryTotal">$0.00</span>
   </div>
-
-  <!-- MAIN CONTENT -->
-  <div class="content" id="contentArea">
-
-    <button id="resetPageBtn">Reset Page</button>
-
-    <table id="inventoryTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Qty</th>
-          <th>Price</th>
-          <th>Sold</th>
-          <th>Cash/App</th>
-          <th>Initials</th>
-          <th>App Tax</th>
-        </tr>
-      </thead>
-
-      <tbody id="inventoryBody">
-        <tr>
-          <td>
-            <select class="name-select">
-              <option value="">_</option>
-              <option value="Gaby">Gaby</option>
-              <option value="Ginger">Ginger</option>
-            </select>
-          </td>
-
-          <td><input type="text" class="desc-input"></td>
-          <td><input type="number" class="qty-input" min="0" value="0"></td>
-          <td><input type="number" class="price-input" min="0" step="0.01"></td>
-
-          <td class="checkbox-cell"><input type="checkbox" class="sold-checkbox"></td>
-
-          <td>
-            <select class="cashapp-select">
-              <option value="">_</option>
-              <option value="Cash">Cash</option>
-              <option value="App">App</option>
-            </select>
-          </td>
-
-          <td>
-            <select class="initials-select">
-              <option value="">_</option>
-              <option value="GMG">GMG</option>
-              <option value="GC">GC</option>
-            </select>
-          </td>
-
-          <td class="app-tax-cell">$0.00</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="total-item">
+    <span class="total-label">Profit</span><span id="profitTotal">$0.00</span>
   </div>
+  <div class="total-item">
+    <span class="total-label">Cash</span><span id="cashTotal">$0.00</span>
+  </div>
+  <div class="total-item">
+    <span class="total-label">App</span><span id="appTotal">$0.00</span>
+  </div>
+  <div class="total-item">
+    <span class="total-label">App Tax</span><span id="appTaxTotal">$0.00</span>
+  </div>
+  <div class="total-item">
+    <span class="total-label">Gaby</span><span id="gabyTotal">$0.00</span>
+  </div>
+  <div class="total-item">
+    <span class="total-label">Ginger</span><span id="gingerTotal">$0.00</span>
+  </div>
+</div>
 
-  <!-- SMALLER +ROW BUTTON -->
-  <button id="addRowBtn" class="floating-add-btn">+ Row</button>
+<!-- MAIN CONTENT -->
+<div class="content" id="contentArea">
+  <button id="resetPageBtn">Reset Page</button>
 
-  <!-- SCRIPT -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
+  <table id="inventoryTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Sold</th>
+        <th>Cash/App</th>
+        <th>Initials</th>
+        <th>App Tax</th>
+      </tr>
+    </thead>
 
-      document.querySelector(".logo-fade").classList.add("visible");
+    <tbody id="inventoryBody">
+      <tr>
+        <td>
+          <select class="name-select">
+            <option value="">_</option>
+            <option value="Gaby">Gaby</option>
+            <option value="Ginger">Ginger</option>
+          </select>
+        </td>
 
-      document.getElementById("enterBtn").addEventListener("click", () => {
-        document.getElementById("coverSheet").style.opacity = "0";
-        setTimeout(() => {
-          document.getElementById("coverSheet").style.display = "none";
-          document.getElementById("totalsBar").style.opacity = "1";
-          document.getElementById("contentArea").style.opacity = "1";
-        }, 1200);
-      });
+        <td><input type="text" class="desc-input" /></td>
+        <td><input type="number" class="qty-input" min="0" value="0" /></td>
+        <td><input type="number" class="price-input" min="0" step="0.01" /></td>
 
-      function parseNumber(v) {
-        const n = parseFloat(v);
-        return isNaN(n) ? 0 : n;
+        <td class="checkbox-cell">
+          <input type="checkbox" class="sold-checkbox" />
+        </td>
+
+        <td>
+          <select class="cashapp-select">
+            <option value="">_</option>
+            <option value="Cash">Cash</option>
+            <option value="App">App</option>
+          </select>
+        </td>
+
+        <td>
+          <select class="initials-select">
+            <option value="">_</option>
+            <option value="GMG">GMG</option>
+            <option value="GC">GC</option>
+          </select>
+        </td>
+
+        <td class="app-tax-cell">$0.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SMALLER +ROW BUTTON -->
+<button id="addRowBtn" class="floating-add-btn">+ Row</button>
+
+<!-- SCRIPT -->
+document.addEventListener('DOMContentLoaded', () => {
+  // Fade in title
+  document.getElementById('titleText').classList.add('visible');
+
+  // Enter button
+  document.getElementById('enterBtn').addEventListener('click', () => {
+    document.getElementById('coverSheet').style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('coverSheet').style.display = 'none';
+      document.getElementById('totalsBar').style.opacity = '1';
+      document.getElementById('contentArea').style.opacity = '1';
+    }, 1200);
+  });
+
+  function parseNumber(v) {
+    const n = parseFloat(v);
+    return isNaN(n) ? 0 : n;
+  }
+
+  function formatMoney(v) {
+    return '$' + v.toFixed(2);
+  }
+
+  function recalc() {
+    const rows = [...document.querySelectorAll('#inventoryBody tr')];
+
+    let inventory = 0,
+      profit = 0,
+      cash = 0,
+      app = 0,
+      appTaxTotal = 0,
+      gaby = 0,
+      ginger = 0;
+
+    rows.forEach((row) => {
+      const name = row.querySelector('.name-select').value;
+      const qty = parseNumber(row.querySelector('.qty-input').value);
+      const price = parseNumber(row.querySelector('.price-input').value);
+      const sold = row.querySelector('.sold-checkbox').checked;
+      const cashapp = row.querySelector('.cashapp-select').value;
+
+      const line = price * qty;
+      inventory += line;
+
+      if (sold) profit += line;
+      if (sold && cashapp === 'Cash') cash += line;
+      if (sold && cashapp === 'App') app += line;
+
+      let appTax = 0;
+      if (sold && cashapp === 'App') {
+        appTax = price * 0.025 + 0.15;
+        appTaxTotal += appTax;
       }
+      row.querySelector('.app-tax-cell').textContent = formatMoney(appTax);
 
-      function formatMoney(v) {
-        return "$" + v.toFixed(2);
-      }
+      if (name === 'Gaby') gaby += line;
+      if (name === 'Ginger') ginger += line;
+    });
 
-      function recalc() {
-        const rows = [...document.querySelectorAll("#inventoryBody tr")];
+    document.getElementById('inventoryTotal').textContent =
+      formatMoney(inventory);
+    document.getElementById('profitTotal').textContent = formatMoney(profit);
+    document.getElementById('cashTotal').textContent = formatMoney(cash);
+    document.getElementById('appTotal').textContent = formatMoney(app);
+    document.getElementById('appTaxTotal').textContent =
+      formatMoney(appTaxTotal);
+    document.getElementById('gabyTotal').textContent = formatMoney(gaby);
+    document.getElementById('gingerTotal').textContent = formatMoney(ginger);
+  }
 
-        let inventory = 0, profit = 0, cash = 0, app = 0, appTaxTotal = 0, gaby = 0, ginger = 0;
+  function addRow() {
+    const tbody = document.getElementById('inventoryBody');
+    const tr = document.createElement('tr');
 
-        rows.forEach(row => {
-          const name = row.querySelector(".name-select").value;
-          const qty = parseNumber(row.querySelector(".qty-input").value);
-          const price = parseNumber(row.querySelector(".price-input").value);
-          const sold = row.querySelector(".sold-checkbox").checked;
-          const cashapp = row.querySelector(".cashapp-select").value;
-
-          const line = price * qty;
-
-          inventory += line;
-
-          if (sold) profit += line;
-          if (sold && cashapp === "Cash") cash += line;
-          if (sold && cashapp === "App") app += line;
-
-          let appTax = 0;
-          if (sold && cashapp === "App") {
-            appTax = (price * 0.025) + 0.15;
-            appTaxTotal += appTax;
-          }
-          row.querySelector(".app-tax-cell").textContent = formatMoney(appTax);
-
-          if (name === "Gaby") gaby += line;
-          if (name === "Ginger") ginger += line;
-        });
-
-        document.getElementById("inventoryTotal").textContent = formatMoney(inventory);
-        document.getElementById("profitTotal").textContent = formatMoney(profit);
-        document.getElementById("cashTotal").textContent = formatMoney(cash);
-        document.getElementById("appTotal").textContent = formatMoney(app);
-        document.getElementById("appTaxTotal").textContent = formatMoney(appTaxTotal);
-        document.getElementById("gabyTotal").textContent = formatMoney(gaby);
-        document.getElementById("gingerTotal").textContent = formatMoney(ginger);
-      }
-
-      function addRow() {
-        const tbody = document.getElementById("inventoryBody");
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
+    tr.innerHTML = `
           <td>
             <select class="name-select">
               <option value="">_</option>
@@ -394,31 +202,212 @@
           <td class="app-tax-cell">$0.00</td>
         `;
 
-        tbody.appendChild(tr);
-        wireRow(tr);
-        recalc();
-        tr.scrollIntoView({ behavior: "smooth", block: "center" });
-        return tr;
-      }
+    tbody.appendChild(tr);
+    wireRow(tr);
+    recalc();
+    tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return tr;
+  }
 
-      function wireRow(row) {
-        row.querySelectorAll("input, select").forEach(el => {
-          el.addEventListener("input", recalc);
-          el.addEventListener("change", recalc);
-        });
-      }
-
-      wireRow(document.querySelector("#inventoryBody tr"));
-
-      document.getElementById("addRowBtn").addEventListener("click", () => {
-        const newRow = addRow();
-        newRow.querySelector(".name-select").focus();
-      });
-
-      recalc();
-
+  function wireRow(row) {
+    row.querySelectorAll('input, select').forEach((el) => {
+      el.addEventListener('input', recalc);
+      el.addEventListener('change', recalc);
     });
-  </script>
+  }
 
-</body>
-</html>
+  wireRow(document.querySelector('#inventoryBody tr'));
+
+  document.getElementById('addRowBtn').addEventListener('click', () => {
+    const newRow = addRow();
+    newRow.querySelector('.name-select').focus();
+  });
+
+  recalc();
+});
+body {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  background: #f9e3ea;
+  color: #000;
+  overflow-x: hidden;
+}
+
+/* ---------------- COVER SHEET ---------------- */
+#coverSheet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f9e3ea; /* SOLID background */
+  z-index: 99999; /* ABOVE EVERYTHING */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 1.2s ease;
+}
+
+.cover-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 10;
+  position: relative;
+}
+
+.cover-gsflowers {
+  font-family: 'Great Vibes', cursive;
+  font-size: 140px;
+  color: #000;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+  opacity: 0;
+  transition: opacity 1.4s ease;
+  position: relative;
+  z-index: 9999;
+}
+
+.cover-gsflowers.visible {
+  opacity: 1;
+}
+
+.enter-centered {
+  margin-top: 30px;
+  padding: 12px 28px;
+  background: #000;
+  color: #fff;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.3s ease;
+  z-index: 9999;
+}
+
+.enter-centered:hover {
+  background: #333;
+  transform: scale(1.05);
+}
+
+/* ---------------- TOTALS BAR ---------------- */
+.totals-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.total-item {
+  flex: 1;
+  text-align: center;
+}
+
+.total-label {
+  font-family: 'Great Vibes', cursive;
+  font-size: 18px;
+}
+
+.total-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ---------------- CONTENT ---------------- */
+.content {
+  padding: 160px 16px 24px;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  overflow-x: auto;
+}
+
+/* ---------------- TABLE ---------------- */
+#inventoryTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#inventoryTable th,
+#inventoryTable td {
+  padding: 4px 6px;
+  text-align: center;
+  vertical-align: middle;
+  height: 38px;
+}
+
+#inventoryTable th:nth-child(2),
+#inventoryTable td:nth-child(2) {
+  width: 28%;
+  text-align: left;
+}
+
+#inventoryTable input,
+#inventoryTable select {
+  width: 100%;
+  height: 32px;
+  font-size: 15px;
+  padding: 4px 6px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.desc-input {
+  text-align: left;
+}
+
+.checkbox-cell input {
+  transform: scale(1.2);
+}
+
+.app-tax-cell {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+#inventoryTable th {
+  background: #f5c9d6;
+  font-size: 15px;
+  font-weight: 600;
+  position: sticky;
+  top: 80px;
+  z-index: 500;
+}
+
+/* ---------------- SMALLER +ROW BUTTON ---------------- */
+.floating-add-btn {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  z-index: 2000;
+  opacity: 0.9;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.floating-add-btn:hover {
+  transform: scale(1.06);
+  opacity: 1;
+}
