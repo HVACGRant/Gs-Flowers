@@ -294,18 +294,14 @@ body {
 
 /* ---------------- TOTALS BAR ---------------- */
 .totals-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
+  width: 100%;
   background: #000;
   color: #fff;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  z-index: 1000;
+  align-items: flex-start;
+  padding: 20px 16px;
+  margin-top: 40px;
   opacity: 0;
   transition: opacity 1.2s ease;
 }
@@ -313,21 +309,25 @@ body {
 .total-item {
   flex: 1;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .total-label {
-  font-family: 'Great Vibes', cursive;
-  font-size: 18px;
+  font-family: "Great Vibes", cursive;
+  font-size: 22px;
+  margin-bottom: 4px;
 }
 
 .total-value {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
 }
 
+
 /* ---------------- CONTENT ---------------- */
 .content {
-  padding: 160px 16px 24px;
+  padding-top:  20px;
   opacity: 0;
   transition: opacity 1.2s ease;
   overflow-x: auto;
@@ -382,7 +382,7 @@ body {
   font-size: 15px;
   font-weight: 600;
   position: sticky;
-  top: 80px;
+  top: 0;
   z-index: 500;
 }
 
